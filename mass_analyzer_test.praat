@@ -12,6 +12,7 @@ for file to numberOfFiles
 	currentTextGrid = Read from file: inputFolder$ + "\"+ currentFile$
 	currentTextGrid$ = selected$("TextGrid")
 	currentSound = Read from file: inputFolder$ + "\"+ ( replace$(currentFile$,  ".TextGrid", ".wav", 0))
+	currentSound$ = selected$("Sound")
 	selectObject: currentTextGrid
 	numberOfPhonemes = Get number of intervals: 2
 	Convert to Unicode
