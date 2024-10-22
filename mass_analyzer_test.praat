@@ -1,13 +1,11 @@
 writeInfoLine: "Initializing Praat Bulk Analyzer"
 appendInfoLine: newline$, "Vargo, Julian (2024). Praat Bulk Analyzer [Computer Software]"
 appendInfoLine: "University of California, Berkeley. Department of Spanish & Portuguese"
-
 inputFolder$ = "C:\Users\julia\Documents\Test_SRT\Praat_Sript_Analyzer"
 outputCSV$ = "C:\Users\julia\Documents\Test_SRT\acousticdata.csv"
 writeFileLine: "outputCSV$", "start_time,end_time,phoneme,f0_10,f0_20,f0_30,f0_40,f0_50,f0_60,f0_70,f0_80,f0_90,f1_10,f1_20,f1_30,f1_40,f1_50,f1_60,f1_70,f1_80,f1_90,f2_10,f2_20,f2_30,f2_40,f2_50,f2_60,f2_70,f2_80,f2_90,f3_10,f3_20,f3_30,f3_40,f3_50,f3_60,f3_70,f3_80,f3_90,f4_10,f4_20,f4_30,f4_40,f4_50,f4_60,f4_70,f4_80,f4_90,f5_10,f5_20,f5_30,f5_40,f5_50,f5_60,f5_70,f5_80,f5_90,bandwidth1_10,bandwidth1_20,bandwidth1_30,bandwidth1_40,bandwidth1_50,bandwidth1_60,bandwidth1_70,bandwidth1_80,bandwidth1_90,bandwidth2_10,bandwidth2_20,bandwidth2_30,bandwidth2_40,bandwidth2_50,bandwidth2_60,bandwidth2_70,bandwidth2_80,bandwidth2_90,bandwidth3_10,bandwidth3_20,bandwidth3_30,bandwidth3_40,bandwidth3_50,bandwidth3_60,bandwidth3_70,bandwidth3_80,bandwidth3_90,bandwidth4_10,bandwidth4_20,bandwidth4_30,bandwidth4_40,bandwidth4_50,bandwidth4_60,bandwidth4_70,bandwidth4_80,bandwidth4_90,bandwidth5_10,bandwidth5_20,bandwidth5_30,bandwidth5_40,bandwidth5_50,bandwidth5_60,bandwidth5_70,bandwidth5_80,bandwidth5_90,f1_slope_20,f1_slope_30,f1_slope_40,f1_slope_50,f1_slope_60,f1_slope_70,f1_slope_80,f2_slope_20,f2_slope_30,f2_slope_40,f2_slope_50,f2_slope_60,f2_slope_70,f2_slope_80,f3_slope_20,f3_slope_30,f3_slope_40,f3_slope_50,f3_slope_60,f3_slope_70,f3_slope_80,f4_slope_20,f4_slope_30,f4_slope_40,f4_slope_50,f4_slope_60,f4_slope_70,f4_slope_80,f5_slope_20,f5_slope_30,f5_slope_40,f5_slope_50,f5_slope_60,f5_slope_70,f5_slope_80,harmonicity_10,harmonicity_20,harmonicity_30,harmonicity_40,harmonicity_50,harmonicity_60,harmonicity_70,harmonicity_80,harmonicity_90,intensity_10,intensity_20,intensity_30,intensity_40,intensity_50,intensity_60,intensity_70,intensity_80,intensity_90,intensity_100,jitter_10,jitter_20,jitter_30,jitter_40,jitter_50,jitter_60,jitter_70,jitter_80,jitter_90,jitter_100"
 fileList = Create Strings as file list: "fileList", inputFolder$ + "\" +"*.TextGrid"
 numberOfFiles = Get number of strings
-
 for file to numberOfFiles
 	selectObject: fileList
 	currentFile$ = Get string: file
@@ -27,7 +25,6 @@ select Sound 'currentSound$'
 currentIntensity = To Intensity... 50 0 yes
 select Sound 'currentSound$'
 currentPointProcess = To PointProcess (periodic, cc)... 50 800
-
 for thisInterval from 1 to numberOfPhonemes
 select TextGrid 'currentTextGrid$'
 thisPhoneme$ = Get label of interval: 2, thisInterval
@@ -43,7 +40,6 @@ sixtypercent = thisPhonemeStartTime + (duration*3)/5
 seventypercent = thisPhonemeStartTime + (duration*7)/10
 eightypercent = thisPhonemeStartTime + (duration*4)/5
 ninetypercent = thisPhonemeStartTime + (duration*9)/10
-
 selectObject: currentPitch
 f0_10 = Get value at time... tenpercent Hertz Linear
 f0_20 = Get value at time... twentypercent Hertz Linear
@@ -63,8 +59,6 @@ f0_60$ = fixed$(f0_60, 0)
 f0_70$ = fixed$(f0_70, 0)
 f0_80$ = fixed$(f0_80, 0)
 f0_90$ = fixed$(f0_90, 0)
-
-
 selectObject: currentFormant
 f1_10 = Get value at time... 1 tenpercent Hertz Linear
 f1_20 = Get value at time... 1 twentypercent Hertz Linear
@@ -316,7 +310,6 @@ f5_slope_50$ = fixed$(f5_slope_50, 2)
 f5_slope_60$ = fixed$(f5_slope_60, 2)
 f5_slope_70$ = fixed$(f5_slope_70, 2)
 f5_slope_80$ = fixed$(f5_slope_80, 2)
-
 selectObject: currentHarmonicity
 harmonicity_10 = Get value at time... tenpercent cubic
 harmonicity_20 = Get value at time... twentypercent cubic
@@ -336,7 +329,6 @@ harmonicity_60$ = fixed$(harmonicity_60, 2)
 harmonicity_70$ = fixed$(harmonicity_70, 2)
 harmonicity_80$ = fixed$(harmonicity_80, 2)
 harmonicity_90$ = fixed$(harmonicity_90, 2)
-
 selectObject: currentIntensity
 intensity_10 = Get mean... thisPhonemeStartTime tenpercent dB
 intensity_20 = Get mean... tenpercent twentypercent dB
@@ -358,7 +350,6 @@ intensity_70$ = fixed$(intensity_70, 2)
 intensity_80$ = fixed$(intensity_80, 2)
 intensity_90$ = fixed$(intensity_90, 2)
 intensity_100$ = fixed$(intensity_100, 2)
-
 selectObject: currentPointProcess
 jitter_10 = Get jitter (local, absolute)... thisPhonemeStartTime tenpercent 0.0001 0.02 1.3
 jitter_20 = Get jitter (local, absolute)... tenpercent twentypercent 0.0001 0.02 1.3
@@ -380,7 +371,6 @@ jitter_70$ = fixed$(jitter_70, 2)
 jitter_80$ = fixed$(jitter_80, 2)
 jitter_90$ = fixed$(jitter_90, 2)
 jitter_100$ = fixed$(jitter_100, 2)
-
 appendFileLine: outputPath$, thisPhonemeStartTime, tab$, ",", tab$, thisPhonemeEndTime, tab$, ",", tab$, thisPhoneme$, tab$, ",", tab$, f0_10$, tab$, ",", tab$, f0_20$, tab$, ",", tab$, f0_30$, tab$, ",", tab$, f0_40$, tab$, ",", tab$, f0_50$, tab$, ",", tab$, f0_60$, tab$, ",", tab$, f0_70$, tab$, ",", tab$, f0_80$, tab$, ",", tab$, f0_90$, tab$, ",", tab$, f1_10$, tab$, ",", tab$, f1_20$, tab$, ",", tab$, f1_30$, tab$, ",", tab$, f1_40$, tab$, ",", tab$, f1_50$, tab$, ",", tab$, f1_60$, tab$, ",", tab$, f1_70$, tab$, ",", tab$, f1_80$, tab$, ",", tab$, f1_90$, tab$, ",", tab$, f2_10$, tab$, ",", tab$, f2_20$, tab$, ",", tab$, f2_30$, tab$, ",", tab$, f2_40$, tab$, ",", tab$, f2_50$, tab$, ",", tab$, f2_60$, tab$, ",", tab$, f2_70$, tab$, ",", tab$, f2_80$, tab$, ",", tab$, f2_90$, tab$, ",", tab$, f3_10$, tab$, ",", tab$, f3_20$, tab$, ",", tab$, f3_30$, tab$, ",", tab$, f3_40$, tab$, ",", tab$, f3_50$, tab$, ",", tab$, f3_60$, tab$, ",", tab$, f3_70$, tab$, ",", tab$, f3_80$, tab$, ",", tab$, f3_90$, tab$, ",", tab$, f4_10$, tab$, ",", tab$, f4_20$, tab$, ",", tab$, f4_30$, tab$, ",", tab$, f4_40$, tab$, ",", tab$, f4_50$, tab$, ",", tab$, f4_60$, tab$, ",", tab$, f4_70$, tab$, ",", tab$, f4_80$, tab$, ",", tab$, f4_90$, tab$, ",", tab$, f5_10$, tab$, ",", tab$, f5_20$, tab$, ",", tab$, f5_30$, tab$, ",", tab$, f5_40$, tab$, ",", tab$, f5_50$, tab$, ",", tab$, f5_60$, tab$, ",", tab$, f5_70$, tab$, ",", tab$, f5_80$, tab$, ",", tab$, f5_90$, tab$, ",", tab$, bandwidth1_10$, tab$, ",", tab$, bandwidth1_20$, tab$, ",", tab$, bandwidth1_30$, tab$, ",", tab$, bandwidth1_40$, tab$, ",", tab$, bandwidth1_50$, tab$, ",", tab$, bandwidth1_60$, tab$, ",", tab$, bandwidth1_70$, tab$, ",", tab$, bandwidth1_80$, tab$, ",", tab$, bandwidth1_90$, tab$, ",", tab$, bandwidth2_10$, tab$, ",", tab$, bandwidth2_20$, tab$, ",", tab$, bandwidth2_30$, tab$, ",", tab$, bandwidth2_40$, tab$, ",", tab$, bandwidth2_50$, tab$, ",", tab$, bandwidth2_60$, tab$, ",", tab$, bandwidth2_70$, tab$, ",", tab$, bandwidth2_80$, tab$, ",", tab$, bandwidth2_90$, tab$, ",", tab$, bandwidth3_10$, tab$, ",", tab$, bandwidth3_20$, tab$, ",", tab$, bandwidth3_30$, tab$, ",", tab$, bandwidth3_40$, tab$, ",", tab$, bandwidth3_50$, tab$, ",", tab$, bandwidth3_60$, tab$, ",", tab$, bandwidth3_70$, tab$, ",", tab$, bandwidth3_80$, tab$, ",", tab$, bandwidth3_90$, tab$, ",", tab$, bandwidth4_10$, tab$, ",", tab$, bandwidth4_20$, tab$, ",", tab$, bandwidth4_30$, tab$, ",", tab$, bandwidth4_40$, tab$, ",", tab$, bandwidth4_50$, tab$, ",", tab$, bandwidth4_60$, tab$, ",", tab$, bandwidth4_70$, tab$, ",", tab$, bandwidth4_80$, tab$, ",", tab$, bandwidth4_90$, tab$, ",", tab$, bandwidth5_10$, tab$, ",", tab$, bandwidth5_20$, tab$, ",", tab$, bandwidth5_30$, tab$, ",", tab$, bandwidth5_40$, tab$, ",", tab$, bandwidth5_50$, tab$, ",", tab$, bandwidth5_60$, tab$, ",", tab$, bandwidth5_70$, tab$, ",", tab$, bandwidth5_80$, tab$, ",", tab$, bandwidth5_90$, tab$, ",", tab$, f1_slope_20$, tab$, ",", tab$, f1_slope_30$, tab$, ",", tab$, f1_slope_40$, tab$, ",", tab$, f1_slope_50$, tab$, ",", tab$, f1_slope_60$, tab$, ",", tab$, f1_slope_70$, tab$, ",", tab$, f1_slope_80$, tab$, ",", tab$, f2_slope_20$, tab$, ",", tab$, f2_slope_30$, tab$, ",", tab$, f2_slope_40$, tab$, ",", tab$, f2_slope_50$, tab$, ",", tab$, f2_slope_60$, tab$, ",", tab$, f2_slope_70$, tab$, ",", tab$, f2_slope_80$, tab$, ",", tab$, f3_slope_20$, tab$, ",", tab$, f3_slope_30$, tab$, ",", tab$, f3_slope_40$, tab$, ",", tab$, f3_slope_50$, tab$, ",", tab$, f3_slope_60$, tab$, ",", tab$, f3_slope_70$, tab$, ",", tab$, f3_slope_80$, tab$, ",", tab$, f4_slope_20$, tab$, ",", tab$, f4_slope_30$, tab$, ",", tab$, f4_slope_40$, tab$, ",", tab$, f4_slope_50$, tab$, ",", tab$, f4_slope_60$, tab$, ",", tab$, f4_slope_70$, tab$, ",", tab$, f4_slope_80$, tab$, ",", tab$, f5_slope_20$, tab$, ",", tab$, f5_slope_30$, tab$, ",", tab$, f5_slope_40$, tab$, ",", tab$, f5_slope_50$, tab$, ",", tab$, f5_slope_60$, tab$, ",", tab$, f5_slope_70$, tab$, ",", tab$, f5_slope_80$, tab$, ",", tab$, harmonicity_10$, tab$, ",", tab$, harmonicity_20$, tab$, ",", tab$, harmonicity_30$, tab$, ",", tab$, harmonicity_40$, tab$, ",", tab$, harmonicity_50$, tab$, ",", tab$, harmonicity_60$, tab$, ",", tab$, harmonicity_70$, tab$, ",", tab$, harmonicity_80$, tab$, ",", tab$, harmonicity_90$, tab$, ",", tab$, intensity_10$, tab$, ",", tab$, intensity_20$, tab$, ",", tab$, intensity_30$, tab$, ",", tab$, intensity_40$, tab$, ",", tab$, intensity_50$, tab$, ",", tab$, intensity_60$, tab$, ",", tab$, intensity_70$, tab$, ",", tab$, intensity_80$, tab$, ",", tab$, intensity_90$, tab$, ",", tab$, intensity_100$, tab$, ",", tab$, jitter_10$, tab$, ",", tab$, jitter_20$, tab$, ",", tab$, jitter_30$, tab$, ",", tab$, jitter_40$, tab$, ",", tab$, jitter_50$, tab$, ",", tab$, jitter_60$, tab$, ",", tab$, jitter_70$, tab$, ",", tab$, jitter_80$, tab$, ",", tab$, jitter_90$, tab$, ",", tab$, jitter_100$, tab$
 endfor
 removeObject: currentFormant
@@ -388,8 +378,5 @@ removeObject: currentPitch
 removeObject: currentHarmonicity
 removeObject: currentIntensity
 removeObject: currentPointProcess
-select TextGrid 'currentTextGrid$'
-select Sound 'currentSound$'
 endfor
-
 appendInfoLine: newline$, "Script completed successfully"
