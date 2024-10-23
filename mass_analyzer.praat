@@ -1,5 +1,5 @@
-writeInfoLine: "Initializing Praat Bulk Analyzer"
-appendInfoLine: newline$, "Vargo, Julian (2024). Praat Bulk Analyzer [Computer Software]"
+writeInfoLine: "Initializing Praat Mass Analyzer"
+appendInfoLine: newline$, "Vargo, Julian (2024). Praat Mass Analyzer [Computer Software]"
 appendInfoLine: "University of California, Berkeley. Department of Spanish & Portuguese"
 appendInfoLine: newline$, "Please enter the appropriate file paths into lines 6, 7, 8, and 396"
 appendInfoLine: "Script is loading. This may take a minute. Please stand by."
