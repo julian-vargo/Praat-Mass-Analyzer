@@ -15,3 +15,6 @@ The script automatically collects the following parameters for each phone segmen
 - **Following Phoneme**
 - **Phone Duration**
 - **Jitter**
+
+-**All point measurements are taken at the 10%, 20%, 30%... 90% portions of the phone**
+-**All interval measurements are taken at the 0%->10%, 10%->20%, ... , 90%->100% portions of the phone**
