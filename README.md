@@ -2,6 +2,11 @@
 
 **Praat Mass Analyzer** is a Python script that automates the extraction of various acoustic measurements using Praat. This tool is designed for researchers and linguists who need to process large amounts of audio data efficiently. 
 
+## How to cite
+
+Vargo, Julian (2024). Praat Mass Analyzer. [https://github.com/julian-vargo/Praat-Mass-Analyzer/]
+Department of Spanish & Portuguese. University of California, Berkeley.
+
 ## Features
 
 The script automatically collects the following parameters for each phone segment in a sound file:
