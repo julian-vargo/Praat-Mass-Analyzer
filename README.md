@@ -20,8 +20,12 @@ The script automatically collects the following parameters for each phone segmen
 - **Following Phoneme**
 - **Phone Duration**
 - **Jitter**
+- **Center of Gravity (one measurement taken for the entire phoneme)**
+- **Center of Gravity Standard Deviation (one measurement taken for the entire phoneme)**
+- **Skewness (one measurement taken for the entire phoneme)**
+- **Kurtosis (one measurement taken for the entire phoneme)**
 
-- *All point measurements are taken at the 10%, 20%, 30%... 90% portions of the phone*
+- *All point measurements are taken at the 10%, 20%, 30%... 90% portions of the phone, unless otherwise specified*
 - *All interval measurements are taken at the 0%->10%, 10%->20%, ... , 90%->100% portions of the phone*
 - *Time-aligned annotations are to be on the **second** tier of a .Textgrid file*
 
