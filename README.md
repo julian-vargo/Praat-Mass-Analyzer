@@ -24,12 +24,16 @@ The script automatically collects the following parameters for each phone segmen
 - **Center of Gravity** Standard Deviation (one measurement taken for the entire phoneme)
 - **Skewness** (one measurement taken for the entire phoneme)
 - **Kurtosis** (one measurement taken for the entire phoneme)
+  
 # Notes
+
 - *All point measurements are taken at the 10%, 20%, 30%... 90% portions of the phone, unless otherwise specified*
 - *All interval measurements are taken at the 0%->10%, 10%->20%, ... , 90%->100% portions of the phone*
 - *Time-aligned annotations are to be on the **second** tier of a .Textgrid file*
-- - *Designed on Praat version 6.4.17 (8 August 2024)*
+- *Designed on Praat version 6.4.17 (8 August 2024)*
+  
 # Contact
+
 -Julian Vargo
 -Department of Spanish & Portuguese
 -University of California, Berkeley
