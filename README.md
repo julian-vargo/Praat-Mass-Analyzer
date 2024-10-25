@@ -29,4 +29,5 @@ The script automatically collects the following parameters for each phone segmen
 - *All interval measurements are taken at the 0%->10%, 10%->20%, ... , 90%->100% portions of the phone*
 - *Time-aligned annotations are to be on the **second** tier of a .Textgrid file*
 
+- *If you are having trouble getting this Praat script to work, please email me at julianvargo@berkeley.edu and I can arrange a time to assist you*
 - *Designed on Praat version 6.4.17 (8 August 2024)*
