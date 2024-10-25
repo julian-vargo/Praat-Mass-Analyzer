@@ -32,6 +32,6 @@ The script automatically collects the following parameters for each phone segmen
 - *Designed on Praat version 6.4.17 (8 August 2024)*
 
 ## Contact
-Julian Vargo | Department of Spanish & Portuguese | University of California, Berkeley
-julianvargo@berkeley.edu
+Julian Vargo | Department of Spanish & Portuguese | University of California, Berkeley | julianvargo@berkeley.edu
+
 *If you are having trouble getting this Praat script to work, please email me and I can arrange a time to assist you*
