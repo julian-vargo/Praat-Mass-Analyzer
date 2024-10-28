@@ -4,9 +4,18 @@ appendInfoLine: "University of California, Berkeley. Department of Spanish & Por
 appendInfoLine: newline$, "Please enter the appropriate file paths into lines 6, 7, and 409"
 appendInfoLine: "Script is loading. This may take a minute. Please stand by."
 inputFolder$ = "C:\Users\julia\Documents\Test_SRT\small_dataset"
-writeFileLine: "C:\Users\julia\Documents\Test_SRT\notabdata.csv", "start_time,end_time,phoneme,word,duration,preceding_phone,following_phone,f0_10,f0_20,f0_30,f0_40,f0_50,f0_60,f0_70,f0_80,f0_90,f1_10,f1_20,f1_30,f1_40,f1_50,f1_60,f1_70,f1_80,f1_90,f2_10,f2_20,f2_30,f2_40,f2_50,f2_60,f2_70,f2_80,f2_90,f3_10,f3_20,f3_30,f3_40,f3_50,f3_60,f3_70,f3_80,f3_90,f4_10,f4_20,f4_30,f4_40,f4_50,f4_60,f4_70,f4_80,f4_90,f5_10,f5_20,f5_30,f5_40,f5_50,f5_60,f5_70,f5_80,f5_90,bandwidth1_10,bandwidth1_20,bandwidth1_30,bandwidth1_40,bandwidth1_50,bandwidth1_60,bandwidth1_70,bandwidth1_80,bandwidth1_90,bandwidth2_10,bandwidth2_20,bandwidth2_30,bandwidth2_40,bandwidth2_50,bandwidth2_60,bandwidth2_70,bandwidth2_80,bandwidth2_90,bandwidth3_10,bandwidth3_20,bandwidth3_30,bandwidth3_40,bandwidth3_50,bandwidth3_60,bandwidth3_70,bandwidth3_80,bandwidth3_90,bandwidth4_10,bandwidth4_20,bandwidth4_30,bandwidth4_40,bandwidth4_50,bandwidth4_60,bandwidth4_70,bandwidth4_80,bandwidth4_90,bandwidth5_10,bandwidth5_20,bandwidth5_30,bandwidth5_40,bandwidth5_50,bandwidth5_60,bandwidth5_70,bandwidth5_80,bandwidth5_90,f1_slope_20,f1_slope_30,f1_slope_40,f1_slope_50,f1_slope_60,f1_slope_70,f1_slope_80,f2_slope_20,f2_slope_30,f2_slope_40,f2_slope_50,f2_slope_60,f2_slope_70,f2_slope_80,f3_slope_20,f3_slope_30,f3_slope_40,f3_slope_50,f3_slope_60,f3_slope_70,f3_slope_80,f4_slope_20,f4_slope_30,f4_slope_40,f4_slope_50,f4_slope_60,f4_slope_70,f4_slope_80,f5_slope_20,f5_slope_30,f5_slope_40,f5_slope_50,f5_slope_60,f5_slope_70,f5_slope_80,harmonicity_10,harmonicity_20,harmonicity_30,harmonicity_40,harmonicity_50,harmonicity_60,harmonicity_70,harmonicity_80,harmonicity_90,intensity_10,intensity_20,intensity_30,intensity_40,intensity_50,intensity_60,intensity_70,intensity_80,intensity_90,intensity_100,jitter_10,jitter_20,jitter_30,jitter_40,jitter_50,jitter_60,jitter_70,jitter_80,jitter_90,jitter_100, cog, cogSD, skewness, kurtosis"
+writeFileLine: "C:\Users\julia\Documents\Test_SRT\notabdata.csv", "start_time,end_time,phoneme,place,manner,voice,height,backness,roundness,tenseness,word,duration,preceding_phone,following_phone,f0_10,f0_20,f0_30,f0_40,f0_50,f0_60,f0_70,f0_80,f0_90,f1_10,f1_20,f1_30,f1_40,f1_50,f1_60,f1_70,f1_80,f1_90,f2_10,f2_20,f2_30,f2_40,f2_50,f2_60,f2_70,f2_80,f2_90,f3_10,f3_20,f3_30,f3_40,f3_50,f3_60,f3_70,f3_80,f3_90,f4_10,f4_20,f4_30,f4_40,f4_50,f4_60,f4_70,f4_80,f4_90,f5_10,f5_20,f5_30,f5_40,f5_50,f5_60,f5_70,f5_80,f5_90,bandwidth1_10,bandwidth1_20,bandwidth1_30,bandwidth1_40,bandwidth1_50,bandwidth1_60,bandwidth1_70,bandwidth1_80,bandwidth1_90,bandwidth2_10,bandwidth2_20,bandwidth2_30,bandwidth2_40,bandwidth2_50,bandwidth2_60,bandwidth2_70,bandwidth2_80,bandwidth2_90,bandwidth3_10,bandwidth3_20,bandwidth3_30,bandwidth3_40,bandwidth3_50,bandwidth3_60,bandwidth3_70,bandwidth3_80,bandwidth3_90,bandwidth4_10,bandwidth4_20,bandwidth4_30,bandwidth4_40,bandwidth4_50,bandwidth4_60,bandwidth4_70,bandwidth4_80,bandwidth4_90,bandwidth5_10,bandwidth5_20,bandwidth5_30,bandwidth5_40,bandwidth5_50,bandwidth5_60,bandwidth5_70,bandwidth5_80,bandwidth5_90,f1_slope_20,f1_slope_30,f1_slope_40,f1_slope_50,f1_slope_60,f1_slope_70,f1_slope_80,f2_slope_20,f2_slope_30,f2_slope_40,f2_slope_50,f2_slope_60,f2_slope_70,f2_slope_80,f3_slope_20,f3_slope_30,f3_slope_40,f3_slope_50,f3_slope_60,f3_slope_70,f3_slope_80,f4_slope_20,f4_slope_30,f4_slope_40,f4_slope_50,f4_slope_60,f4_slope_70,f4_slope_80,f5_slope_20,f5_slope_30,f5_slope_40,f5_slope_50,f5_slope_60,f5_slope_70,f5_slope_80,harmonicity_10,harmonicity_20,harmonicity_30,harmonicity_40,harmonicity_50,harmonicity_60,harmonicity_70,harmonicity_80,harmonicity_90,intensity_10,intensity_20,intensity_30,intensity_40,intensity_50,intensity_60,intensity_70,intensity_80,intensity_90,intensity_100,jitter_10,jitter_20,jitter_30,jitter_40,jitter_50,jitter_60,jitter_70,jitter_80,jitter_90,jitter_100, cog, cogSD, skewness, kurtosis"
 fileList = Create Strings as file list: "fileList", inputFolder$ + "\" +"*.TextGrid"
 numberOfFiles = Get number of strings
+
+place$ = "specifyplace"
+manner$ = "specifymanner"
+voice$ = "specifyvoice"
+height$ = "specifylow"
+backness$ = "specifybackness"
+roundness$ = "specifyroundness"
+tenseness$ = "specifytenseness"
+
 for file to numberOfFiles
 selectObject: fileList
 currentFile$ = Get string: file
@@ -28,6 +37,7 @@ currentIntensity = To Intensity... 50 0 yes
 select Sound 'currentSound$'
 currentPointProcess = To PointProcess (periodic, cc)... 50 800
 intervalNumber = 1
+
 for thisInterval from intervalNumber to numberOfPhonemes
 select TextGrid 'currentTextGrid$'
 thisPhoneme$ = Get label of interval: 2, thisInterval
@@ -36,6 +46,7 @@ thisPhonemeStartTime = Get start point: 2, thisInterval
 thisPhonemeEndTime = Get end point: 2, thisInterval
 precederNumber = thisInterval - 1
 precedingPhoneme$ = "boundary"
+
 if thisInterval > 1
 precedingPhoneme$ = Get label of interval: 2, precederNumber
 if precedingPhoneme$ = ""
@@ -44,12 +55,203 @@ endif
 endif
 followerNumber = thisInterval + 1
 followingPhoneme$ = "boundary"
+
 if thisInterval < numberOfPhonemes
 followingPhoneme$ = Get label of interval: 2, followerNumber
 if followingPhoneme$ = ""
 followingPhoneme$ = "boundary"
 endif
 endif
+
+if thisPhoneme$ = "AA0" or thisPhoneme$ = "AA1" or thisPhoneme$ = "AA2"
+    place$ = "dorsal"
+    manner$ = "vowel"
+    voice$ = "voiced"
+    height$ = "low"
+    backness$ = "back"
+    roundness$ = "unround"
+    tenseness$ = "tense"
+elsif thisPhoneme$ = "AE0" or thisPhoneme$ = "AE1" or thisPhoneme$ = "AE2"
+    place$ = "dorsal"
+    manner$ = "vowel"
+    voice$ = "voiced"
+    height$ = "low"
+    backness$ = "front"
+    roundness$ = "unround"
+    tenseness$ = "tense"
+
+
+elsif thisPhoneme$ = "AH0" or thisPhoneme$ = "AH1" or thisPhoneme$ = "AH2"
+    place$ = "dorsal"
+    manner$ = "vowel"
+    voice$ = "voiced"
+    height$ = "mid"
+    backness$ = "back"
+    roundness$ = "unround"
+    tenseness$ = "lax"
+
+
+elsif thisPhoneme$ = "AO0" or thisPhoneme$ = "AO1" or thisPhoneme$ = "AO2"
+    place$ = "dorsal"
+    manner$ = "vowel"
+    voice$ = "voiced"
+    height$ = "mid"
+    backness$ = "back"
+    roundness$ = "round"
+    tenseness$ = "lax"
+
+
+elsif thisPhoneme$ = "AW0" or thisPhoneme$ = "AW1" or thisPhoneme$ = "AW2"
+    place$ = "dorsal"
+    manner$ = "vowel"
+    voice$ = "voiced"
+    height$ = "low_high"
+    backness$ = "central_back"
+    roundness$ = "unround_round"
+    tenseness$ = "diphthong"
+
+
+elsif thisPhoneme$ = "AX0" or thisPhoneme$ = "AX1" or thisPhoneme$ = "AX2"
+    place$ = "dorsal"
+    manner$ = "vowel"
+    voice$ = "voiced"
+    height$ = "mid"
+    backness$ = "central"
+    roundness$ = "unround"
+    tenseness$ = "lax"
+
+
+elsif thisPhoneme$ = "AXR0" or thisPhoneme$ = "AXR1" or thisPhoneme$ = "AXR2"
+    place$ = "dorsal"
+    manner$ = "vowel"
+    voice$ = "voiced"
+    height$ = "mid"
+    backness$ = "central"
+    roundness$ = "round"
+    tenseness$ = "rhotic"
+
+
+elsif thisPhoneme$ = "AY0" or thisPhoneme$ = "AY1" or thisPhoneme$ = "AY2"
+    place$ = "dorsal"
+    manner$ = "vowel"
+    voice$ = "voiced"
+    height$ = "low_high"
+    backness$ = "central_front"
+    roundness$ = "unround"
+    tenseness$ = "diphthong"
+
+
+elsif thisPhoneme$ = "EH0" or thisPhoneme$ = "EH1" or thisPhoneme$ = "EH2"
+    place$ = "dorsal"
+    manner$ = "vowel"
+    voice$ = "voiced"
+    height$ = "mid"
+    backness$ = "front"
+    roundness$ = "unround"
+    tenseness$ = "lax"
+
+
+elsif thisPhoneme$ = "ER0" or thisPhoneme$ = "ER1" or thisPhoneme$ = "ER2"
+    place$ = "dorsal"
+    manner$ = "vowel"
+    voice$ = "voiced"
+    height$ = "mid"
+    backness$ = "front"
+    roundness$ = "round"
+    tenseness$ = "rhotic"
+
+
+elsif thisPhoneme$ = "EY0" or thisPhoneme$ = "EY1" or thisPhoneme$ = "EY2"
+    place$ = "dorsal"
+    manner$ = "vowel"
+    voice$ = "voiced"
+    height$ = "mid_high"
+    backness$ = "front"
+    roundness$ = "unround"
+    tenseness$ = "diphthong"
+
+
+elsif thisPhoneme$ = "IH0" or thisPhoneme$ = "IH1" or thisPhoneme$ = "IH2"
+    place$ = "dorsal"
+    manner$ = "vowel"
+    voice$ = "voiced"
+    height$ = "high"
+    backness$ = "front"
+    roundness$ = "unround"
+    tenseness$ = "lax"
+
+
+elsif thisPhoneme$ = "IX0" or thisPhoneme$ = "IX1" or thisPhoneme$ = "IX2"
+    place$ = "dorsal"
+    manner$ = "vowel"
+    voice$ = "voiced"
+    height$ = "high"
+    backness$ = "central"
+    roundness$ = "unround"
+    tenseness$ = "lax"
+
+
+elsif thisPhoneme$ = "IY0" or thisPhoneme$ = "IY1" or thisPhoneme$ = "IY2"
+    place$ = "dorsal"
+    manner$ = "vowel"
+    voice$ = "voiced"
+    height$ = "high"
+    backness$ = "front"
+    roundness$ = "unround"
+    tenseness$ = "tense"
+
+
+elsif thisPhoneme$ = "OW0" or thisPhoneme$ = "OW1" or thisPhoneme$ = "OW2"
+    place$ = "dorsal"
+    manner$ = "vowel"
+    voice$ = "voiced"
+    height$ = "mid_high"
+    backness$ = "back"
+    roundness$ = "round"
+    tenseness$ = "diphthong"
+
+
+elsif thisPhoneme$ = "OY0" or thisPhoneme$ = "OY1" or thisPhoneme$ = "OY2"
+    place$ = "dorsal"
+    manner$ = "vowel"
+    voice$ = "voiced"
+    height$ = "mid_high"
+    backness$ = "back_front"
+    roundness$ = "round_unround"
+    tenseness$ = "diphthong"
+
+
+elsif thisPhoneme$ = "UH0" or thisPhoneme$ = "UH1" or thisPhoneme$ = "UH2"
+    place$ = "dorsal"
+    manner$ = "vowel"
+    voice$ = "voiced"
+    height$ = "high"
+    backness$ = "back"
+    roundness$ = "round"
+    tenseness$ = "lax"
+
+
+elsif thisPhoneme$ = "UW0" or thisPhoneme$ = "UW1" or thisPhoneme$ = "UW2"
+    place$ = "dorsal"
+    manner$ = "vowel"
+    voice$ = "voiced"
+    height$ = "high"
+    backness$ = "back"
+    roundness$ = "round"
+    tenseness$ = "tense"
+
+
+elsif thisPhoneme$ = "UX0" or thisPhoneme$ = "UX1" or thisPhoneme$ = "UX2"
+    place$ = "dorsal"
+    manner$ = "vowel"
+    voice$ = "voiced"
+    height$ = "high"
+    backness$ = "back"
+    roundness$ = "round"
+    tenseness$ = "lax"
+endif
+
+
 thisPhonemeStartTime$ = fixed$(thisPhonemeStartTime, 4)
 thisPhonemeEndTime$ = fixed$(thisPhonemeEndTime, 4)
 duration = thisPhonemeEndTime - thisPhonemeStartTime
@@ -406,7 +608,7 @@ skewness = Get skewness... 2
 kurtosis = Get kurtosis... 2
 removeObject: currentSpectrum
 removeObject: currentSoundChunk
-appendFileLine: "C:\Users\julia\Documents\Test_SRT\notabdata.csv", thisPhonemeStartTime,",",thisPhonemeEndTime,",",thisPhoneme$,",",currentWord$,",",duration$,",",precedingPhoneme$,",",followingPhoneme$,",",f0_10$,",",f0_20$,",",f0_30$,",",f0_40$,",",f0_50$,",",f0_60$,",",f0_70$,",",f0_80$,",",f0_90$,",",f1_10$,",",f1_20$,",",f1_30$,",",f1_40$,",",f1_50$,",",f1_60$,",",f1_70$,",",f1_80$,",",f1_90$,",",f2_10$,",",f2_20$,",",f2_30$,",",f2_40$,",",f2_50$,",",f2_60$,",",f2_70$,",",f2_80$,",",f2_90$,",",f3_10$,",",f3_20$,",",f3_30$,",",f3_40$,",",f3_50$,",",f3_60$,",",f3_70$,",",f3_80$,",",f3_90$,",",f4_10$,",",f4_20$,",",f4_30$,",",f4_40$,",",f4_50$,",",f4_60$,",",f4_70$,",",f4_80$,",",f4_90$,",",f5_10$,",",f5_20$,",",f5_30$,",",f5_40$,",",f5_50$,",",f5_60$,",",f5_70$,",",f5_80$,",",f5_90$,",",bandwidth1_10$,",",bandwidth1_20$,",",bandwidth1_30$,",",bandwidth1_40$,",",bandwidth1_50$,",",bandwidth1_60$,",",bandwidth1_70$,",",bandwidth1_80$,",",bandwidth1_90$,",",bandwidth2_10$,",",bandwidth2_20$,",",bandwidth2_30$,",",bandwidth2_40$,",",bandwidth2_50$,",",bandwidth2_60$,",",bandwidth2_70$,",",bandwidth2_80$,",",bandwidth2_90$,",",bandwidth3_10$,",",bandwidth3_20$,",",bandwidth3_30$,",",bandwidth3_40$,",",bandwidth3_50$,",",bandwidth3_60$,",",bandwidth3_70$,",",bandwidth3_80$,",",bandwidth3_90$,",",bandwidth4_10$,",",bandwidth4_20$,",",bandwidth4_30$,",",bandwidth4_40$,",",bandwidth4_50$,",",bandwidth4_60$,",",bandwidth4_70$,",",bandwidth4_80$,",",bandwidth4_90$,",",bandwidth5_10$,",",bandwidth5_20$,",",bandwidth5_30$,",",bandwidth5_40$,",",bandwidth5_50$,",",bandwidth5_60$,",",bandwidth5_70$,",",bandwidth5_80$,",",bandwidth5_90$,",",f1_slope_20$,",",f1_slope_30$,",",f1_slope_40$,",",f1_slope_50$,",",f1_slope_60$,",",f1_slope_70$,",",f1_slope_80$,",",f2_slope_20$,",",f2_slope_30$,",",f2_slope_40$,",",f2_slope_50$,",",f2_slope_60$,",",f2_slope_70$,",",f2_slope_80$,",",f3_slope_20$,",",f3_slope_30$,",",f3_slope_40$,",",f3_slope_50$,",",f3_slope_60$,",",f3_slope_70$,",",f3_slope_80$,",",f4_slope_20$,",",f4_slope_30$,",",f4_slope_40$,",",f4_slope_50$,",",f4_slope_60$,",",f4_slope_70$,",",f4_slope_80$,",",f5_slope_20$,",",f5_slope_30$,",",f5_slope_40$,",",f5_slope_50$,",",f5_slope_60$,",",f5_slope_70$,",",f5_slope_80$,",",harmonicity_10$,",",harmonicity_20$,",",harmonicity_30$,",",harmonicity_40$,",",harmonicity_50$,",",harmonicity_60$,",",harmonicity_70$,",",harmonicity_80$,",",harmonicity_90$,",",intensity_10$,",",intensity_20$,",",intensity_30$,",",intensity_40$,",",intensity_50$,",",intensity_60$,",",intensity_70$,",",intensity_80$,",",intensity_90$,",",intensity_100$,",",jitter_10$,",",jitter_20$,",",jitter_30$,",",jitter_40$,",",jitter_50$,",",jitter_60$,",",jitter_70$,",",jitter_80$,",",jitter_90$,",",jitter_100$,",",cog,",",cogSD,",",skewness,",",kurtosis, tab$
+appendFileLine: "C:\Users\julia\Documents\Test_SRT\notabdata.csv", thisPhonemeStartTime,",",thisPhonemeEndTime,",",thisPhoneme$,",",place$,",",manner$,",",voice$,",",height$,",",backness$,",",roundness$,",",tenseness$,",",currentWord$,",",duration$,",",precedingPhoneme$,",",followingPhoneme$,",",f0_10$,",",f0_20$,",",f0_30$,",",f0_40$,",",f0_50$,",",f0_60$,",",f0_70$,",",f0_80$,",",f0_90$,",",f1_10$,",",f1_20$,",",f1_30$,",",f1_40$,",",f1_50$,",",f1_60$,",",f1_70$,",",f1_80$,",",f1_90$,",",f2_10$,",",f2_20$,",",f2_30$,",",f2_40$,",",f2_50$,",",f2_60$,",",f2_70$,",",f2_80$,",",f2_90$,",",f3_10$,",",f3_20$,",",f3_30$,",",f3_40$,",",f3_50$,",",f3_60$,",",f3_70$,",",f3_80$,",",f3_90$,",",f4_10$,",",f4_20$,",",f4_30$,",",f4_40$,",",f4_50$,",",f4_60$,",",f4_70$,",",f4_80$,",",f4_90$,",",f5_10$,",",f5_20$,",",f5_30$,",",f5_40$,",",f5_50$,",",f5_60$,",",f5_70$,",",f5_80$,",",f5_90$,",",bandwidth1_10$,",",bandwidth1_20$,",",bandwidth1_30$,",",bandwidth1_40$,",",bandwidth1_50$,",",bandwidth1_60$,",",bandwidth1_70$,",",bandwidth1_80$,",",bandwidth1_90$,",",bandwidth2_10$,",",bandwidth2_20$,",",bandwidth2_30$,",",bandwidth2_40$,",",bandwidth2_50$,",",bandwidth2_60$,",",bandwidth2_70$,",",bandwidth2_80$,",",bandwidth2_90$,",",bandwidth3_10$,",",bandwidth3_20$,",",bandwidth3_30$,",",bandwidth3_40$,",",bandwidth3_50$,",",bandwidth3_60$,",",bandwidth3_70$,",",bandwidth3_80$,",",bandwidth3_90$,",",bandwidth4_10$,",",bandwidth4_20$,",",bandwidth4_30$,",",bandwidth4_40$,",",bandwidth4_50$,",",bandwidth4_60$,",",bandwidth4_70$,",",bandwidth4_80$,",",bandwidth4_90$,",",bandwidth5_10$,",",bandwidth5_20$,",",bandwidth5_30$,",",bandwidth5_40$,",",bandwidth5_50$,",",bandwidth5_60$,",",bandwidth5_70$,",",bandwidth5_80$,",",bandwidth5_90$,",",f1_slope_20$,",",f1_slope_30$,",",f1_slope_40$,",",f1_slope_50$,",",f1_slope_60$,",",f1_slope_70$,",",f1_slope_80$,",",f2_slope_20$,",",f2_slope_30$,",",f2_slope_40$,",",f2_slope_50$,",",f2_slope_60$,",",f2_slope_70$,",",f2_slope_80$,",",f3_slope_20$,",",f3_slope_30$,",",f3_slope_40$,",",f3_slope_50$,",",f3_slope_60$,",",f3_slope_70$,",",f3_slope_80$,",",f4_slope_20$,",",f4_slope_30$,",",f4_slope_40$,",",f4_slope_50$,",",f4_slope_60$,",",f4_slope_70$,",",f4_slope_80$,",",f5_slope_20$,",",f5_slope_30$,",",f5_slope_40$,",",f5_slope_50$,",",f5_slope_60$,",",f5_slope_70$,",",f5_slope_80$,",",harmonicity_10$,",",harmonicity_20$,",",harmonicity_30$,",",harmonicity_40$,",",harmonicity_50$,",",harmonicity_60$,",",harmonicity_70$,",",harmonicity_80$,",",harmonicity_90$,",",intensity_10$,",",intensity_20$,",",intensity_30$,",",intensity_40$,",",intensity_50$,",",intensity_60$,",",intensity_70$,",",intensity_80$,",",intensity_90$,",",intensity_100$,",",jitter_10$,",",jitter_20$,",",jitter_30$,",",jitter_40$,",",jitter_50$,",",jitter_60$,",",jitter_70$,",",jitter_80$,",",jitter_90$,",",jitter_100$,",",cog,",",cogSD,",",skewness,",",kurtosis, tab$
 endif
 endfor
 removeObject: currentFormant
