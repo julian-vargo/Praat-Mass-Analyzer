@@ -1,10 +1,10 @@
 # Praat Mass Analyzer
 
-**Praat Mass Analyzer** is a Praat script that automates the extraction of several acoustic measurements. This tool is designed for researchers and linguists who need to process large amounts of audio data efficiently.
+**Praat Mass Analyzer** is a Praat script that automates the extraction of several acoustic measurements. This tool is designed for researchers and linguists who need to process large amounts of audio data efficiently. This Praat script is file batchable and operable on Windows, Mac, or any other operating system capable of running Praat.
 
 ## How to cite
 
-Vargo, Julian (2024). Praat Mass Analyzer. [https://github.com/julian-vargo/Praat-Mass-Analyzer/]
+Vargo, Julian (2025). Praat Mass Analyzer. [https://github.com/julian-vargo/Praat-Mass-Analyzer/]
 Department of Spanish & Portuguese. University of California, Berkeley.
 
 ## Features
@@ -16,10 +16,14 @@ The script automatically collects the following parameters for each phone segmen
 - Formant Slope
 - Harmonicity
 - Intensity
+- Intensity Max (One measurement)
+- Intensity Min (One measurement)
+- Max intensity of the current phone minus the minimum intensity of the previous phone (header name is intensity_difference)
 - Preceding Phoneme
 - Following Phoneme
 - Phone Duration
 - Jitter
+- Shimmer
 - Center of Gravity (one measurement taken for the entire phoneme)
 - Center of Gravity Standard Deviation (one measurement taken for the entire phoneme)
 - Skewness (one measurement taken for the entire phoneme)
