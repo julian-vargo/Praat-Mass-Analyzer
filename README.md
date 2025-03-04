@@ -38,4 +38,5 @@ The script automatically collects the following parameters for each phone segmen
 ## Contact
 Julian Vargo | Department of Spanish & Portuguese | University of California, Berkeley | julianvargo@berkeley.edu
 
+*Written on Praat version 6.4.25 (Boersma & Weenink 2024)*
 *If you are having trouble getting this Praat script to work, please email me and I can arrange a time to assist you*
