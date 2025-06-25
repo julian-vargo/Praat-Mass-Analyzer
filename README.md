@@ -12,8 +12,8 @@ Department of Spanish & Portuguese. University of California, Berkeley.
 The script automatically collects the following parameters for each phone segment in a sound file.
 By default, each measurement is gathered at 10% intervals throughout each phone:
 - Formants (F1-F5)
-    - You have the option to gather formants using a Least Square Linear Regression-based algorithm to optimize the smoothness of the LPC formant tracking
-    - This idea was based on Santiago Barreda's FastTrack plugin for Praat, but I wanted to integrate a regression that could work within a single Praat script that also extracted non-formant measurements.  
+    - You can optionally gather formants using a Least Squares Linear Regression-based algorithm of the first three formants to optimize the smoothness of the LPC formant tracking.
+    - This idea was based on Santiago Barreda's very elaborate FastTrack plugin for Praat, but I wanted to integrate a regression that could work within a single Praat script that also extracted non-formant measurements.  
 - Pitch (F0)
 - Formant Bandwidths (F1-F5)
 - Formant Slope
@@ -37,6 +37,7 @@ By default, each measurement is gathered at 10% intervals throughout each phone:
 - *All point measurements are taken at the 10%, 20%, 30%... 90% portions of the phone, unless otherwise specified*
 - *All interval measurements are taken at the 0%->10%, 10%->20%, ... , 90%->100% portions of the phone*
 - *The script supports exporting information for between 1 and 3 textgrid tiers (obligatorily phone, optionally word, and optionally notes/task-type/speaker)*
+- The optional LSRL formant tracking algorithm uses three formant-ceiling sweeps to narrow down on the perfect formant ceiling for a given sound. The formant tracking is pretty good, but it is at the expense of speed. I don't recommend using this algorithm for more than an hour of data at a time. Additionally, there are some issues with formant tracking at the 10% and 90% phoneme edges when using the regression optimization. 
 - *Designed on Praat version 6.4.25*
 
 ## Contact
