@@ -17,10 +17,10 @@ comment Department of Spanish & Portuguese. UC Berkeley.
 comment -----
 comment Please enter the file path where your TextGrids and Sounds are located.
 	comment Enter all file paths like this:   C:\Users\...\folder
-	sentence Input_folder C:\Users\julia\Downloads\misc\julian
+	sentence Input_folder C:\documents\corpus
 	comment Please insert the desired file path and name of your output .csv file.
     comment This script writes the csv file for you, so you just need to supply a path.
-	sentence Csv_file_path C:\Users\julia\Downloads\misc\julian.csv
+	sentence Csv_file_path C:\research\dataset.csv
 	comment Which tier number is the tier containing your phonemes/phones of interest?
 	integer Phone_tier_number 2
     comment Which tier number is your word tier? Leave as 0 if none.
@@ -29,8 +29,8 @@ comment Please enter the file path where your TextGrids and Sounds are located.
     integer Miscellaneous_tier_number 0
     comment Would you like to implement a Least Square Regression Formant Optimization?
     comment The LSRL Formant Optimization should only be used on small files
-    boolean I_want_LSRL_formant_optimization 1
-    boolean I_am_using_a_Windows_computer 1
+    boolean I_want_LSRL_formant_optimization 0
+    boolean I_am_using_a_Windows_computer 0
 endform
 
 appendInfoLine: newline$, "This script will take a while to run while acoustic measurements are being gathered."
