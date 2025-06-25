@@ -31,7 +31,7 @@ By default, each measurement is gathered at 10% intervals throughout each phone:
 - Center of Gravity Standard Deviation (one measurement taken for the entire phoneme)
 - Skewness (one measurement taken for the entire phoneme)
 - Kurtosis (one measurement taken for the entire phoneme)
-- A1P0 (Difference of Amplitude of first formant minus the amplitude of the harmonic above the first formant)
+- A1P0 (Difference of Amplitude of first formant minus the amplitude of the harmonic under the first formant)
   
 ## Notes
 - *All point measurements are taken at the 10%, 20%, 30%... 90% portions of the phone, unless otherwise specified*
