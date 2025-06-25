@@ -5,137 +5,78 @@ appendInfoLine: "University of California, Berkeley. Department of Spanish & Por
 #####################################################################
 #This section creates the form that pops up when you start the script.
 #The syntax here is tricky, so I will break it down.
-#"sentence" is the command to set a string variable. If my string is inputFolder, it will save to a variable called inputFolder$ with a dollar sign.
+#"sentence" is the command to set a string variable. If my string is inputFolder, it will save to a variable called input_folder$ with a dollar sign.
     #There's no way to get around the dollar sign insertion.
 #Be careful about underscores in your variable names in Praat. They can really mess things up.
 #You'll notice when I write in Praat, I strictly use camel case. Never capitalize the first letter of a variable in Praat, never add spaces or underscores.
     #thisIsAnExampleOfCamelCase, variableName, julianVargo
 #Strings take dollar signs and are non-numeric, integers and floats don't take dollar signs.
 form Vargo 2025 - Praat Mass Analyzer
-	comment Please enter the file path where your TextGridsand Sounds are located
-    comment If you have textgrids in the folder that don't have any sound files,
-    comment then the script will break
-	comment Enter all file paths without quotation marks:   C:\Users\...\folder
-	sentence inputFolder C:\Users\julia\Downloads\research\muhsic\textgrid_aligned
-	comment Please insert the desired file path and name of your output .csv file
-	sentence csvName C:\Users\julia\Downloads\research\muhsic\textgrid_aligned\big_dataset.csv
+comment How to cite: Vargo, Julian (2025). Praat Mass Analyzer [Praat Script].
+comment Department of Spanish & Portuguese. UC Berkeley.
+comment -----
+comment Please enter the file path where your TextGrids and Sounds are located.
+	comment Enter all file paths like this:   C:\Users\...\folder
+	sentence Input_folder C:\Users\julia\Downloads\misc\julian
+	comment Please insert the desired file path and name of your output .csv file.
+    comment This script writes the csv file for you, so you just need to supply a path.
+	sentence Csv_file_path C:\Users\julia\Downloads\misc\julian.csv
 	comment Which tier number is the tier containing your phonemes/phones of interest?
-	integer phoneTierNumber 1
-    comment Which tier number is your task type tier? Leave as 0 if none.
-    integer taskTierNumber 0
+	integer Phone_tier_number 2
     comment Which tier number is your word tier? Leave as 0 if none.
-    integer wordTierNumber 0
-    comment Are you on Windows or another operating system? 
-    comment Don't use quotes. Type "windows" or "other"
-    sentence operatingSystem other
+    integer Word_tier_number 1
+    comment If you'd like details from a third tier, which number is it? Leave as 0 if none.
+    integer Miscellaneous_tier_number 0
+    comment Would you like to implement a Least Square Regression Formant Optimization?
+    comment The LSRL Formant Optimization should only be used on small files
+    boolean I_want_LSRL_formant_optimization 1
+    boolean I_am_using_a_Windows_computer 1
 endform
 
 appendInfoLine: newline$, "This script will take a while to run while acoustic measurements are being gathered."
 appendInfoLine: newline$, "Do not exit the program. Please stand by"
 
-#This "writeFileLine" command has two sections, your actual file name and the name of your columns. The file name is csvName$, which was set during the form...
-#in the previous section. The column names are everything afterwards. Column names aren't variables, so you can set these to whatever you please.
-#Use a comma to write a new column name, and avoid using spaces in your column names otherwise coding languages like R might not know how to process your data.
-writeFileLine: csvName$, "file_name,start_time,end_time,phoneme,word,task_type,duration,preceding_phone,following_phone,f0_10,f0_20,f0_30,f0_40,f0_50,f0_60,f0_70,f0_80,f0_90,f1_10,f1_20,f1_30,f1_40,f1_50,f1_60,f1_70,f1_80,f1_90,f2_10,f2_20,f2_30,f2_40,f2_50,f2_60,f2_70,f2_80,f2_90,f3_10,f3_20,f3_30,f3_40,f3_50,f3_60,f3_70,f3_80,f3_90,f4_10,f4_20,f4_30,f4_40,f4_50,f4_60,f4_70,f4_80,f4_90,f5_10,f5_20,f5_30,f5_40,f5_50,f5_60,f5_70,f5_80,f5_90,bandwidth1_10,bandwidth1_20,bandwidth1_30,bandwidth1_40,bandwidth1_50,bandwidth1_60,bandwidth1_70,bandwidth1_80,bandwidth1_90,bandwidth2_10,bandwidth2_20,bandwidth2_30,bandwidth2_40,bandwidth2_50,bandwidth2_60,bandwidth2_70,bandwidth2_80,bandwidth2_90,bandwidth3_10,bandwidth3_20,bandwidth3_30,bandwidth3_40,bandwidth3_50,bandwidth3_60,bandwidth3_70,bandwidth3_80,bandwidth3_90,bandwidth4_10,bandwidth4_20,bandwidth4_30,bandwidth4_40,bandwidth4_50,bandwidth4_60,bandwidth4_70,bandwidth4_80,bandwidth4_90,bandwidth5_10,bandwidth5_20,bandwidth5_30,bandwidth5_40,bandwidth5_50,bandwidth5_60,bandwidth5_70,bandwidth5_80,bandwidth5_90,f1_slope_20,f1_slope_30,f1_slope_40,f1_slope_50,f1_slope_60,f1_slope_70,f1_slope_80,f2_slope_20,f2_slope_30,f2_slope_40,f2_slope_50,f2_slope_60,f2_slope_70,f2_slope_80,f3_slope_20,f3_slope_30,f3_slope_40,f3_slope_50,f3_slope_60,f3_slope_70,f3_slope_80,f4_slope_20,f4_slope_30,f4_slope_40,f4_slope_50,f4_slope_60,f4_slope_70,f4_slope_80,f5_slope_20,f5_slope_30,f5_slope_40,f5_slope_50,f5_slope_60,f5_slope_70,f5_slope_80,harmonicity_10,harmonicity_20,harmonicity_30,harmonicity_40,harmonicity_50,harmonicity_60,harmonicity_70,harmonicity_80,harmonicity_90,intensity_10,intensity_20,intensity_30,intensity_40,intensity_50,intensity_60,intensity_70,intensity_80,intensity_90,intensity_100,intensity_max,intensity_min,intensity_difference,jitter,shimmer,cog,cogSD,skewness,kurtosis,END_OF_FORM_FOR_PROPER_DISPLAY_OF_DATA"
+# Fancy schmancy way to strip quotation marks from file paths. Makes the script more flexible for the user.
+quote$ = """"
+input_folder$ = replace$(input_folder$, quote$, "", 0)
+csv_file_path$ = replace$(csv_file_path$, quote$, "", 0)
+
+if i_want_LSRL_formant_optimization = 1
+table = Create Table with column names: "table", 0, "file_name start_time end_time phoneme word task_type duration preceding_phone following_phone formant_ceiling f0_10 f0_20 f0_30 f0_40 f0_50 f0_60 f0_70 f0_80 f0_90 f1_10 f1_20 f1_30 f1_40 f1_50 f1_60 f1_70 f1_80 f1_90 f2_10 f2_20 f2_30 f2_40 f2_50 f2_60 f2_70 f2_80 f2_90 f3_10 f3_20 f3_30 f3_40 f3_50 f3_60 f3_70 f3_80 f3_90 f4_10 f4_20 f4_30 f4_40 f4_50 f4_60 f4_70 f4_80 f4_90 f5_10 f5_20 f5_30 f5_40 f5_50 f5_60 f5_70 f5_80 f5_90 bandwidth1_10 bandwidth1_20 bandwidth1_30 bandwidth1_40 bandwidth1_50 bandwidth1_60 bandwidth1_70 bandwidth1_80 bandwidth1_90 bandwidth2_10 bandwidth2_20 bandwidth2_30 bandwidth2_40 bandwidth2_50 bandwidth2_60 bandwidth2_70 bandwidth2_80 bandwidth2_90 bandwidth3_10 bandwidth3_20 bandwidth3_30 bandwidth3_40 bandwidth3_50 bandwidth3_60 bandwidth3_70 bandwidth3_80 bandwidth3_90 bandwidth4_10 bandwidth4_20 bandwidth4_30 bandwidth4_40 bandwidth4_50 bandwidth4_60 bandwidth4_70 bandwidth4_80 bandwidth4_90 bandwidth5_10 bandwidth5_20 bandwidth5_30 bandwidth5_40 bandwidth5_50 bandwidth5_60 bandwidth5_70 bandwidth5_80 bandwidth5_90 f1_slope_20 f1_slope_30 f1_slope_40 f1_slope_50 f1_slope_60 f1_slope_70 f1_slope_80 f2_slope_20 f2_slope_30 f2_slope_40 f2_slope_50 f2_slope_60 f2_slope_70 f2_slope_80 f3_slope_20 f3_slope_30 f3_slope_40 f3_slope_50 f3_slope_60 f3_slope_70 f3_slope_80 f4_slope_20 f4_slope_30 f4_slope_40 f4_slope_50 f4_slope_60 f4_slope_70 f4_slope_80 f5_slope_20 f5_slope_30 f5_slope_40 f5_slope_50 f5_slope_60 f5_slope_70 f5_slope_80 articulatory_maximum harmonicity_10 harmonicity_20 harmonicity_30 harmonicity_40 harmonicity_50 harmonicity_60 harmonicity_70 harmonicity_80 harmonicity_90 intensity_10 intensity_20 intensity_30 intensity_40 intensity_50 intensity_60 intensity_70 intensity_80 intensity_90 intensity_100 intensity_max intensity_min intensity_difference jitter shimmer cog cogSD skewness kurtosis a1p0_10 a1p0_20 a1p0_30 a1p0_40 a1p0_50 a1p0_60 a1p0_70 a1p0_80 a1p0_90"
+else
+table = Create Table with column names: "table", 0, "file_name start_time end_time phoneme word task_type duration preceding_phone following_phone f0_10 f0_20 f0_30 f0_40 f0_50 f0_60 f0_70 f0_80 f0_90 f1_10 f1_20 f1_30 f1_40 f1_50 f1_60 f1_70 f1_80 f1_90 f2_10 f2_20 f2_30 f2_40 f2_50 f2_60 f2_70 f2_80 f2_90 f3_10 f3_20 f3_30 f3_40 f3_50 f3_60 f3_70 f3_80 f3_90 f4_10 f4_20 f4_30 f4_40 f4_50 f4_60 f4_70 f4_80 f4_90 f5_10 f5_20 f5_30 f5_40 f5_50 f5_60 f5_70 f5_80 f5_90 bandwidth1_10 bandwidth1_20 bandwidth1_30 bandwidth1_40 bandwidth1_50 bandwidth1_60 bandwidth1_70 bandwidth1_80 bandwidth1_90 bandwidth2_10 bandwidth2_20 bandwidth2_30 bandwidth2_40 bandwidth2_50 bandwidth2_60 bandwidth2_70 bandwidth2_80 bandwidth2_90 bandwidth3_10 bandwidth3_20 bandwidth3_30 bandwidth3_40 bandwidth3_50 bandwidth3_60 bandwidth3_70 bandwidth3_80 bandwidth3_90 bandwidth4_10 bandwidth4_20 bandwidth4_30 bandwidth4_40 bandwidth4_50 bandwidth4_60 bandwidth4_70 bandwidth4_80 bandwidth4_90 bandwidth5_10 bandwidth5_20 bandwidth5_30 bandwidth5_40 bandwidth5_50 bandwidth5_60 bandwidth5_70 bandwidth5_80 bandwidth5_90 f1_slope_20 f1_slope_30 f1_slope_40 f1_slope_50 f1_slope_60 f1_slope_70 f1_slope_80 f2_slope_20 f2_slope_30 f2_slope_40 f2_slope_50 f2_slope_60 f2_slope_70 f2_slope_80 f3_slope_20 f3_slope_30 f3_slope_40 f3_slope_50 f3_slope_60 f3_slope_70 f3_slope_80 f4_slope_20 f4_slope_30 f4_slope_40 f4_slope_50 f4_slope_60 f4_slope_70 f4_slope_80 f5_slope_20 f5_slope_30 f5_slope_40 f5_slope_50 f5_slope_60 f5_slope_70 f5_slope_80 articulatory_maximum harmonicity_10 harmonicity_20 harmonicity_30 harmonicity_40 harmonicity_50 harmonicity_60 harmonicity_70 harmonicity_80 harmonicity_90 intensity_10 intensity_20 intensity_30 intensity_40 intensity_50 intensity_60 intensity_70 intensity_80 intensity_90 intensity_100 intensity_max intensity_min intensity_difference jitter shimmer cog cogSD skewness kurtosis a1p0_10 a1p0_20 a1p0_30 a1p0_40 a1p0_50 a1p0_60 a1p0_70 a1p0_80 a1p0_90"
+endif
+
 
 #This makes your script file-folder batchable. Backslashes only work on windows and forward slashes are for mac.
 #You'll notice a lot of incoming if statements related to this. Basically, Praat needs to know whether your operating system uses forward slashes or backslashes
 #Otherwise it can't read the file from your computer :(
-if operatingSystem$ = "windows"
-    #or operatingSystem$ = "Windows" or operatingSystem = "WINDOWS" or operatingSystem = "WindowsOS" or operatingSystem = "Windows OS"
-    appendInfoLine: "Detected Windows as your Operating System"
-    operatingSystem$ = "windows"
-    fileList = Create Strings as file list: "fileList", inputFolder$ + "\" +"*.TextGrid"
+if i_am_using_a_Windows_computer = 1
+    fileList = Create Strings as file list: "fileList", input_folder$ + "\\" +"*.TextGrid"
     numberOfFiles = Get number of strings
 else
-    appendInfoLine: "Detected Mac, Linux, or a non-backslash operating system"
-    operatingSystem$ = "mac"
-    fileList = Create Strings as file list: "fileList", inputFolder$ + "/" +"*.TextGrid"
+    fileList = Create Strings as file list: "fileList", input_folder$ + "/" +"*.TextGrid"
     numberOfFiles = Get number of strings
 endif
 for file to numberOfFiles
-    #Just for fun. While you wait for your script, some fun facts will print to the Praat Info page
-    factNumber = randomInteger (1, 30)
-    appendInfoLine: newline$, "Here's a fun fact while you wait:"
-    if factNumber = 1
-        appendInfoLine: newline$, "A group of ferrets are called a fesnyng, the etymology of which traces back to a printing error."
-    elsif factNumber = 2
-        appendInfoLine: newline$, "The word, chortle, comes from the poem Jabberwocky by Lewis Caroll."
-    elsif factNumber = 3
-        appendInfoLine: newline$, "Fricatives can be syllable nuclei in the Nuxalk language."
-    elsif factNumber = 4
-        appendInfoLine: newline$, "nh is a digraph representing a palatal nasal stop in Portuguese."
-    elsif factNumber = 5
-        appendInfoLine: newline$, "Are special characters displaying weird in Excel? Try adding a BOM to your spreadsheet."
-    elsif factNumber = 6
-        appendInfoLine: newline$, "Thums Up is a drink closely related to Coca Cola and is especially popular in India."
-    elsif factNumber = 7
-        appendInfoLine: newline$, "Google street view cars in Kenya have a snorkel sticking out of the front of them."
-    elsif factNumber = 8
-        appendInfoLine: newline$, "Some people use the Russian word, blin, meaning pancakes, as a politcally correct curse-word."
-    elsif factNumber = 9
-        appendInfoLine: newline$, "If you want to learn to Praat script, the comments within this code provide useful tips."
-    elsif factNumber = 10
-        appendInfoLine: newline$, "The csv of this script is almost ready to go for analysis in R. Just delete any boxes that say --undefined-- before you start"
-    elsif factNumber = 11
-        appendInfoLine: newline$, "The csv of this script is almost ready to go for analysis in R. Just delete any boxes that say --undefined-- before you start"
-    elsif factNumber = 12
-        appendInfoLine: newline$, "If you want to learn to Praat script, the comments within this code provide useful tips."
-    elsif factNumber = 13
-        appendInfoLine: newline$, "Are special characters displaying weird in Excel? Try adding a BOM to your spreadsheet."
-    elsif factNumber = 14
-        appendInfoLine: newline$, "Andre3000 released an experimental flute album in 2023 called New Blue Sun. It's known for it's wacky song titles."
-    elsif factNumber = 15
-        appendInfoLine: newline$, "Joey Stanley has some really great Praat and R tutorials!"
-    elsif factNumber = 16
-        appendInfoLine: newline$, "The Voynich Manuscript is an undeciphered alphabetic script from Southern Europe"
-    elsif factNumber = 17
-        appendInfoLine: newline$, "The Greenlandic Government has invested heavily in creating resources for the Kalaallisut language, creating a government branch called the Language Secretariat"
-    elsif factNumber = 18
-        appendInfoLine: newline$, "The Altaic language family is one of the most controversial proposed language families"
-    elsif factNumber = 19
-        appendInfoLine: newline$, "Damin is the only Australian language with clicks. It's a ritual language related to Lardil."
-    elsif factNumber = 20
-        appendInfoLine: newline$, "This script can take a super long time to run if you have enough speech data. Just hold tight!"
-    elsif factNumber = 21
-        appendInfoLine: newline$, "Antartica is the largest desert in the world."
-    elsif factNumber = 22
-        appendInfoLine: newline$, "The llareta plant is a globular plant that grows at about one meter per century and is native to the Atacama desert."
-    elsif factNumber = 23
-        appendInfoLine: newline$, "There are very small amounts of liquid water flowing on Mars."
-    elsif factNumber = 24
-        appendInfoLine: newline$, "Implosive sounds can sometimes pattern phonologically with either obstruents or sonorants."
-    elsif factNumber = 25
-        appendInfoLine: newline$, "The Isle of Man is known for its recent successes in revitalizing the Manx language."
-    elsif factNumber = 26
-        appendInfoLine: newline$, "A new Indo-European language (Anatolian Branch), Kalasmaic, was discovered in 2023."
-    elsif factNumber = 27
-        appendInfoLine: newline$, "Whales communicate through a series of clicks called codas."
-    elsif factNumber = 28
-        appendInfoLine: newline$, "If you have suggestions about what features to incorporate in this script, email julianvargo at berkeley dot edu"
-    elsif factNumber = 29
-        appendInfoLine: newline$, "A very small number of languages have rhotic vowel harmony."
-    elsif factNumber = 30
-        appendInfoLine: newline$, "Sam Cooke and Muhammad Ali wrote a song together called The Gangs All Here."
-    endif
     selectObject: fileList
     currentFile$ = Get string: file
-    if operatingSystem$ = "windows"
-        currentTextGrid = Read from file: inputFolder$ + "\"+ currentFile$
+    if i_am_using_a_Windows_computer = 1
+        currentTextGrid = Read from file: input_folder$ + "\"+ currentFile$
     else
-        currentTextGrid = Read from file: inputFolder$ + "/"+ currentFile$
+        currentTextGrid = Read from file: input_folder$ + "/"+ currentFile$
     endif
     currentTextGrid$ = selected$("TextGrid")
-    if operatingSystem$ = "windows"
-        currentSound = Read from file: inputFolder$ + "\"+ ( replace$(currentFile$,  ".TextGrid", ".wav", 4))
+    if i_am_using_a_Windows_computer = 1
+        currentSound = Read from file: input_folder$ + "\"+ ( replace$(currentFile$,  ".TextGrid", ".wav", 4))
     else
-        currentSound = Read from file: inputFolder$ + "/"+ ( replace$(currentFile$,  ".TextGrid", ".wav", 4))
+        currentSound = Read from file: input_folder$ + "/"+ ( replace$(currentFile$,  ".TextGrid", ".wav", 4))
     endif
     currentSound$ = selected$("Sound")
     selectObject: currentTextGrid
 
     #Gather the number of intervals on your phoneme/phone tier. Stores this value to a variable called numberOfIntervals
-    numberOfIntervals = Get number of intervals: phoneTierNumber
+    numberOfIntervals = Get number of intervals: phone_tier_number
     Convert to Unicode
     
     #This section creates objects in your Praat Objects menu. These are really important, they're basically temporary files will all of the pitch, harmonicity, intensity, periodicity, formant data that you'll need for any acoustic analysis.
@@ -148,9 +89,6 @@ for file to numberOfFiles
     #Creates a Pitch Object. 
     select Sound 'currentSound$'
     currentPitch = To Pitch... 0 50 800
-    #Creates a Formant Object. With the formant object, we can gather formant values and formant bandwidths. Change '5500' to '5000' if your data has mostly male speakers. 
-    select Sound 'currentSound$'
-    currentFormant = To Formant (burg)... 0 5 5500 0.025 50
     #Creates a Harmonicity Object, useful for both obstruent analysis and voice quality analysis.
     select Sound 'currentSound$'
     currentHarmonicity = To Harmonicity (cc)... 0.01 75 0.1 4.5
@@ -160,434 +98,974 @@ for file to numberOfFiles
     #Creates a Point Process object, which is the object type used to gather jitter and shimmer.
     select Sound 'currentSound$'
     currentPointProcess = To PointProcess (periodic, cc)... 50 800
-    
+    if i_want_LSRL_formant_optimization = 0
+        #Creates a Formant Object. With the formant object, we can gather formant values and formant bandwidths. Change '5500' to '5000' if your data has mostly male speakers.
+        formantCeiling = 5500
+        select Sound 'currentSound$'
+        currentFormant = To Formant (burg)... 0 5 formantCeiling 0.025 50
+    endif
     #Executes a command starting at the first interval and goes all the way up to the final interval on the phonemes/phones tier.
     #The current interval being scanned for is called 'currentInter'
     for currentInterval from 1 to numberOfIntervals
         select TextGrid 'currentTextGrid$'
-        thisPhoneme$ = Get label of interval: phoneTierNumber, currentInterval
+        thisPhoneme$ = Get label of interval: phone_tier_number, currentInterval
         if not thisPhoneme$ = ""
-            thisPhonemeStartTime = Get start point: phoneTierNumber, currentInterval
-            thisPhonemeEndTime = Get end point: phoneTierNumber, currentInterval
-            precederNumber = currentInterval - 1
-            precedingPhoneme$ = "boundary"
-            followerNumber = currentInterval + 1
-            followingPhoneme$ = "boundary"
-
-            #We can only gather info about the preceding phoneme if we're not on the very first interval, so we use this "if" statement.
-            if currentInterval > 1
-                precedingPhoneme$ = Get label of interval: phoneTierNumber, precederNumber
-                if precedingPhoneme$ = ""
+            if not thisPhoneme$ = "sil"
+                if not thisPhoneme$ = "<unk>"
+                    thisPhonemeStartTime = Get start point: phone_tier_number, currentInterval
+                    thisPhonemeEndTime = Get end point: phone_tier_number, currentInterval
+                    precederNumber = currentInterval - 1
                     precedingPhoneme$ = "boundary"
-                endif
-            endif
-           
-            #Same logic as the preceding phoneme. We can only gather info about the following phoneme if we're not on the very last interval, so we use this "if" statement.
-            if currentInterval < numberOfIntervals
-                followingPhoneme$ = Get label of interval: phoneTierNumber, followerNumber
-                if followingPhoneme$ = ""
+                    followerNumber = currentInterval + 1
                     followingPhoneme$ = "boundary"
+
+                    if currentInterval > 1
+                        precedingPhoneme$ = Get label of interval: phone_tier_number, precederNumber
+                        if precedingPhoneme$ = ""
+                            precedingPhoneme$ = "boundary"
+                        endif
+                    endif
+                
+                    if currentInterval < numberOfIntervals
+                        followingPhoneme$ = Get label of interval: phone_tier_number, followerNumber
+                        if followingPhoneme$ = ""
+                            followingPhoneme$ = "boundary"
+                        endif
+                    endif
+
+                    duration = thisPhonemeEndTime - thisPhonemeStartTime
+                    tenpercent = thisPhonemeStartTime + duration/10
+                    twentypercent = thisPhonemeStartTime + duration/5
+                    thirtypercent = thisPhonemeStartTime + (duration*3)/10
+                    fortypercent = thisPhonemeStartTime + (duration*2)/5
+                    fiftypercent = thisPhonemeStartTime + duration/2
+                    sixtypercent = thisPhonemeStartTime + (duration*3)/5
+                    seventypercent = thisPhonemeStartTime + (duration*7)/10
+                    eightypercent = thisPhonemeStartTime + (duration*4)/5
+                    ninetypercent = thisPhonemeStartTime + (duration*9)/10
+
+                    currentWord$ = "--undefined--"
+                    if word_tier_number <> 0
+                        currentWordInterval = Get interval at time: word_tier_number, fiftypercent
+                        currentWord$ = Get label of interval: word_tier_number, currentWordInterval
+                    endif
+                    currentTask$ = "--undefined--"
+                    if miscellaneous_tier_number <> 0
+                        currentTaskInterval = Get interval at time: miscellaneous_tier_number, fiftypercent
+                        currentTask$ = Get label of interval: miscellaneous_tier_number, currentTaskInterval
+                    endif
+
+                    #We're going to first select our Pitch object and then gather pitch at the 10% through 90% points
+                    selectObject: currentPitch
+                    f0_10 = Get value at time... tenpercent Hertz Linear
+                    f0_20 = Get value at time... twentypercent Hertz Linear
+                    f0_30 = Get value at time... thirtypercent Hertz Linear
+                    f0_40 = Get value at time... fortypercent Hertz Linear
+                    f0_50 = Get value at time... fiftypercent Hertz Linear
+                    f0_60 = Get value at time... sixtypercent Hertz Linear
+                    f0_70 = Get value at time... seventypercent Hertz Linear
+                    f0_80 = Get value at time... eightypercent Hertz Linear
+                    f0_90 = Get value at time... ninetypercent Hertz Linear
+                    if i_want_LSRL_formant_optimization = 1
+                        selectObject: currentSound
+                        miniSound = Extract part... thisPhonemeStartTime thisPhonemeEndTime hamming 1 on
+                        selectObject: miniSound
+                        miniStart = Get start time
+                        miniEnd = Get end time
+                        miniDuration = miniEnd - miniStart
+                        calcStart = miniStart + (miniDuration * 0.25)
+                        calcEnd = miniEnd - (miniDuration * 0.25)
+                        maxRSquared = -99999
+                        formantCeiling = 5500
+                        for k from 1 to 41
+                            currentCeiling = (50 * (k)) + 4450
+                            procedure lsrlFormant: currentCeiling
+                                windowLength = 0.025
+                                if windowLength <  miniDuration
+                                    selectObject: miniSound
+                                    miniFormant = To Formant (burg)... 0 5 currentCeiling windowLength 50
+                                    miniTotal1 = 0
+                                    miniTotal2 = 0
+                                    miniTotal3 = 0
+                                    for m from 1 to 11
+                                        miniTime [m] = calcStart + (m * (calcEnd - calcStart)) / 11
+                                        t = miniTime [m]
+                                        miniValue1 [m] = Get value at time... 1 t Hertz Linear
+                                        miniTotal1 = miniTotal1 + miniValue1[m]
+                                        miniValue2 [m] = Get value at time... 2 t Hertz Linear
+                                        miniTotal2 = miniTotal2 + miniValue2[m]
+                                        miniValue3 [m] = Get value at time... 3 t Hertz Linear
+                                        miniTotal3 = miniTotal3 + miniValue3[m]
+                                    endfor
+                                    removeObject: miniFormant
+                                    miniAvg1 = miniTotal1 / 11
+                                    miniAvg2 = miniTotal2 / 11
+                                    miniAvg3 = miniTotal3 / 11
+                                    sumMiniNumerator1 = 0
+                                    sumMiniNumerator2 = 0
+                                    sumMiniNumerator3 = 0
+                                    sumMiniDenominator = 0
+                                    for m from 1 to 11
+                                        sumMiniNumerator1 = sumMiniNumerator1 + (miniTime[m] - miniTime[5])*(miniValue1[m]-miniAvg1)
+                                        sumMiniNumerator2 = sumMiniNumerator2 + (miniTime[m] - miniTime[5])*(miniValue2[m]-miniAvg2)
+                                        sumMiniNumerator3 = sumMiniNumerator3 + (miniTime[m] - miniTime[5])*(miniValue3[m]-miniAvg3)
+                                        sumMiniDenominator = sumMiniDenominator + ((miniTime[m] - miniTime[5])*(miniTime[m] - miniTime[5]))
+                                    endfor
+                                    miniSlope1 = sumMiniNumerator1/sumMiniDenominator
+                                    miniSlope2 = sumMiniNumerator2/sumMiniDenominator
+                                    miniSlope3 = sumMiniNumerator3/sumMiniDenominator
+                                    miniIntercept1 = miniAvg1 - (miniTime[5])*miniSlope1
+                                    miniIntercept2 = miniAvg2 - (miniTime[5])*miniSlope2
+                                    miniIntercept3 = miniAvg3 - (miniTime[5])*miniSlope3
+                                    sSE1 = 0
+                                    sST1 = 0
+                                    sSE2 = 0
+                                    sST2 = 0
+                                    sSE3 = 0
+                                    sST3 = 0
+                                    for m from 1 to 11
+                                        yhat1 = miniSlope1 * miniTime[m] + miniIntercept1
+                                        yhat2 = miniSlope2 * miniTime[m] + miniIntercept2
+                                        yhat3 = miniSlope3 * miniTime[m] + miniIntercept3
+                                        err1  = miniValue1[m] - yhat1
+                                        err2  = miniValue2[m] - yhat2
+                                        err3  = miniValue3[m] - yhat3
+                                        sSE1 = sSE1 + err1 * err1
+                                        sSE2 = sSE2 + err2 * err2
+                                        sSE3 = sSE3 + err3 * err3
+                                        sST1 = sST1 + (miniValue1[m] - miniAvg1) * (miniValue1[m] - miniAvg1)
+                                        sST2 = sST2 + (miniValue2[m] - miniAvg2) * (miniValue2[m] - miniAvg2)
+                                        sST3 = sST3 + (miniValue3[m] - miniAvg3) * (miniValue3[m] - miniAvg3)
+                                    endfor
+                                    rSquaredTotal = -99999
+                                    if sST1 <> 0
+                                        if sST2 <> 0
+                                            if sST3 <> 0
+                                                rSquared1 = 1 - (sSE1 / sST1)
+                                                rSquared2 = 1 - (sSE2 / sST2)
+                                                rSquared3 = 1 - (sSE3 / sST3)
+                                                rSquaredTotal = (rSquared1 + rSquared2 + rSquared3) / 3
+                                            endif
+                                        endif
+                                    endif
+                                endif
+                            endproc
+                            @lsrlFormant: currentCeiling
+                            if rSquaredTotal > maxRSquared
+                                maxRSquared = rSquaredTotal
+                                formantCeiling = currentCeiling
+                                firstOptimizationCeiling = formantCeiling
+                            endif
+                        endfor
+                        runSecondOptimization = 1
+                        if maxRSquared = -99999
+                            formantCeiling = 5500
+                            runSecondOptimization = 0
+                        endif
+                        
+                        maxRSquared = -99999
+                        runFinalOptimization = 0
+                        if runSecondOptimization = 1
+                            for k from 1 to 19
+                                currentCeiling = (10 * (k)) + formantCeiling - 100
+                                @lsrlFormant: currentCeiling
+                                if rSquaredTotal > maxRSquared
+                                    maxRSquared = rSquaredTotal
+                                    formantCeiling = currentCeiling
+                                    secondOptimizationCeiling = formantCeiling
+                                endif
+                            endfor
+                            runFinalOptimization = 1
+                            if maxRSquared = -99999
+                                formantCeiling = firstOptimizationCeiling
+                                runFinalOptimization = 0
+                            endif
+                        endif
+                        
+                        maxRSquared = -99999
+                        if runFinalOptimization = 1
+                            for k from 1 to 19
+                                currentCeiling = k + formantCeiling - 10
+                                @lsrlFormant: currentCeiling
+                                if rSquaredTotal > maxRSquared
+                                    maxRSquared = rSquaredTotal
+                                    formantCeiling = currentCeiling
+                                    secondOptimizationCeiling = formantCeiling
+                                endif
+                            endfor
+                            if maxRSquared = -99999
+                                formantCeiling = secondOptimizationCeiling
+                            endif
+                        endif
+                        selectObject: miniSound
+                        currentFormant = To Formant (burg)... 0 5 formantCeiling 0.025 50
+                        mini10 = miniDuration * 0.1
+                        mini20 = miniDuration * 0.2
+                        mini30 = miniDuration * 0.3
+                        mini40 = miniDuration * 0.4
+                        mini50 = miniDuration * 0.5
+                        mini60 = miniDuration * 0.6
+                        mini70 = miniDuration * 0.7
+                        mini80 = miniDuration * 0.8
+                        mini90 = miniDuration * 0.9
+                        f1_10 = Get value at time... 1 mini10 Hertz Linear
+                        f1_20 = Get value at time... 1 mini20 Hertz Linear
+                        f1_30 = Get value at time... 1 mini30 Hertz Linear
+                        f1_40 = Get value at time... 1 mini40 Hertz Linear
+                        f1_50 = Get value at time... 1 mini50 Hertz Linear
+                        f1_60 = Get value at time... 1 mini60 Hertz Linear
+                        f1_70 = Get value at time... 1 mini70 Hertz Linear
+                        f1_80 = Get value at time... 1 mini80 Hertz Linear
+                        f1_90 = Get value at time... 1 mini90 Hertz Linear
+                        f2_10 = Get value at time... 2 mini10 Hertz Linear
+                        f2_20 = Get value at time... 2 mini20 Hertz Linear
+                        f2_30 = Get value at time... 2 mini30 Hertz Linear
+                        f2_40 = Get value at time... 2 mini40 Hertz Linear
+                        f2_50 = Get value at time... 2 mini50 Hertz Linear
+                        f2_60 = Get value at time... 2 mini60 Hertz Linear
+                        f2_70 = Get value at time... 2 mini70 Hertz Linear
+                        f2_80 = Get value at time... 2 mini80 Hertz Linear
+                        f2_90 = Get value at time... 2 mini90 Hertz Linear
+                        f3_10 = Get value at time... 3 mini10 Hertz Linear
+                        f3_20 = Get value at time... 3 mini20 Hertz Linear
+                        f3_30 = Get value at time... 3 mini30 Hertz Linear
+                        f3_40 = Get value at time... 3 mini40 Hertz Linear
+                        f3_50 = Get value at time... 3 mini50 Hertz Linear
+                        f3_60 = Get value at time... 3 mini60 Hertz Linear
+                        f3_70 = Get value at time... 3 mini70 Hertz Linear
+                        f3_80 = Get value at time... 3 mini80 Hertz Linear
+                        f3_90 = Get value at time... 3 mini90 Hertz Linear
+                        f4_10 = Get value at time... 4 mini10 Hertz Linear
+                        f4_20 = Get value at time... 4 mini20 Hertz Linear
+                        f4_30 = Get value at time... 4 mini30 Hertz Linear
+                        f4_40 = Get value at time... 4 mini40 Hertz Linear
+                        f4_50 = Get value at time... 4 mini50 Hertz Linear
+                        f4_60 = Get value at time... 4 mini60 Hertz Linear
+                        f4_70 = Get value at time... 4 mini70 Hertz Linear
+                        f4_80 = Get value at time... 4 mini80 Hertz Linear
+                        f4_90 = Get value at time... 4 mini90 Hertz Linear
+                        f5_10 = Get value at time... 5 mini10 Hertz Linear
+                        f5_20 = Get value at time... 5 mini20 Hertz Linear
+                        f5_30 = Get value at time... 5 mini30 Hertz Linear
+                        f5_40 = Get value at time... 5 mini40 Hertz Linear
+                        f5_50 = Get value at time... 5 mini50 Hertz Linear
+                        f5_60 = Get value at time... 5 mini60 Hertz Linear
+                        f5_70 = Get value at time... 5 mini70 Hertz Linear
+                        f5_80 = Get value at time... 5 mini80 Hertz Linear
+                        f5_90 = Get value at time... 5 mini90 Hertz Linear
+                        bandwidth1_10 = Get bandwidth at time... 1 mini10 Hertz Linear
+                        bandwidth1_20 = Get bandwidth at time... 1 mini20 Hertz Linear
+                        bandwidth1_30 = Get bandwidth at time... 1 mini30 Hertz Linear
+                        bandwidth1_40 = Get bandwidth at time... 1 mini40 Hertz Linear
+                        bandwidth1_50 = Get bandwidth at time... 1 mini50 Hertz Linear
+                        bandwidth1_60 = Get bandwidth at time... 1 mini60 Hertz Linear
+                        bandwidth1_70 = Get bandwidth at time... 1 mini70 Hertz Linear
+                        bandwidth1_80 = Get bandwidth at time... 1 mini80 Hertz Linear
+                        bandwidth1_90 = Get bandwidth at time... 1 mini90 Hertz Linear
+                        bandwidth2_10 = Get bandwidth at time... 2 mini10 Hertz Linear
+                        bandwidth2_20 = Get bandwidth at time... 2 mini20 Hertz Linear
+                        bandwidth2_30 = Get bandwidth at time... 2 mini30 Hertz Linear
+                        bandwidth2_40 = Get bandwidth at time... 2 mini40 Hertz Linear
+                        bandwidth2_50 = Get bandwidth at time... 2 mini50 Hertz Linear
+                        bandwidth2_60 = Get bandwidth at time... 2 mini60 Hertz Linear
+                        bandwidth2_70 = Get bandwidth at time... 2 mini70 Hertz Linear
+                        bandwidth2_80 = Get bandwidth at time... 2 mini80 Hertz Linear
+                        bandwidth2_90 = Get bandwidth at time... 2 mini90 Hertz Linear
+                        bandwidth3_10 = Get bandwidth at time... 3 mini10 Hertz Linear
+                        bandwidth3_20 = Get bandwidth at time... 3 mini20 Hertz Linear
+                        bandwidth3_30 = Get bandwidth at time... 3 mini30 Hertz Linear
+                        bandwidth3_40 = Get bandwidth at time... 3 mini40 Hertz Linear
+                        bandwidth3_50 = Get bandwidth at time... 3 mini50 Hertz Linear
+                        bandwidth3_60 = Get bandwidth at time... 3 mini60 Hertz Linear
+                        bandwidth3_70 = Get bandwidth at time... 3 mini70 Hertz Linear
+                        bandwidth3_80 = Get bandwidth at time... 3 mini80 Hertz Linear
+                        bandwidth3_90 = Get bandwidth at time... 3 mini90 Hertz Linear
+                        bandwidth4_10 = Get bandwidth at time... 4 mini10 Hertz Linear
+                        bandwidth4_20 = Get bandwidth at time... 4 mini20 Hertz Linear
+                        bandwidth4_30 = Get bandwidth at time... 4 mini30 Hertz Linear
+                        bandwidth4_40 = Get bandwidth at time... 4 mini40 Hertz Linear
+                        bandwidth4_50 = Get bandwidth at time... 4 mini50 Hertz Linear
+                        bandwidth4_60 = Get bandwidth at time... 4 mini60 Hertz Linear
+                        bandwidth4_70 = Get bandwidth at time... 4 mini70 Hertz Linear
+                        bandwidth4_80 = Get bandwidth at time... 4 mini80 Hertz Linear
+                        bandwidth4_90 = Get bandwidth at time... 4 mini90 Hertz Linear
+                        bandwidth5_10 = Get bandwidth at time... 5 mini10 Hertz Linear
+                        bandwidth5_20 = Get bandwidth at time... 5 mini20 Hertz Linear
+                        bandwidth5_30 = Get bandwidth at time... 5 mini30 Hertz Linear
+                        bandwidth5_40 = Get bandwidth at time... 5 mini40 Hertz Linear
+                        bandwidth5_50 = Get bandwidth at time... 5 mini50 Hertz Linear
+                        bandwidth5_60 = Get bandwidth at time... 5 mini60 Hertz Linear
+                        bandwidth5_70 = Get bandwidth at time... 5 mini70 Hertz Linear
+                        bandwidth5_80 = Get bandwidth at time... 5 mini80 Hertz Linear
+                        bandwidth5_90 = Get bandwidth at time... 5 mini90 Hertz Linear
+                        f1_slope_20 = ((f1_30 - f1_10) / (mini30 - mini10))
+                        f1_slope_30 = ((f1_40 - f1_20) / (mini40 - mini20))
+                        f1_slope_40 = ((f1_50 - f1_30) / (mini50 - mini30))
+                        f1_slope_50 = ((f1_60 - f1_40) / (mini60 - mini40))
+                        f1_slope_60 = ((f1_70 - f1_50) / (mini70 - mini50))
+                        f1_slope_70 = ((f1_80 - f1_60) / (mini80 - mini60))
+                        f1_slope_80 = ((f1_90 - f1_70) / (mini90 - mini70))
+                        f2_slope_20 = ((f2_30 - f2_10) / (mini30 - mini10))
+                        f2_slope_30 = ((f2_40 - f2_20) / (mini40 - mini20))
+                        f2_slope_40 = ((f2_50 - f2_30) / (mini50 - mini30))
+                        f2_slope_50 = ((f2_60 - f2_40) / (mini60 - mini40))
+                        f2_slope_60 = ((f2_70 - f2_50) / (mini70 - mini50))
+                        f2_slope_70 = ((f2_80 - f2_60) / (mini80 - mini60))
+                        f2_slope_80 = ((f2_90 - f2_70) / (mini90 - mini70))
+                        f3_slope_20 = ((f3_30 - f3_10) / (mini30 - mini10))
+                        f3_slope_30 = ((f3_40 - f3_20) / (mini40 - mini20))
+                        f3_slope_40 = ((f3_50 - f3_30) / (mini50 - mini30))
+                        f3_slope_50 = ((f3_60 - f3_40) / (mini60 - mini40))
+                        f3_slope_60 = ((f3_70 - f3_50) / (mini70 - mini50))
+                        f3_slope_70 = ((f3_80 - f3_60) / (mini80 - mini60))
+                        f3_slope_80 = ((f3_90 - f3_70) / (mini90 - mini70))
+                        f4_slope_20 = ((f4_30 - f4_10) / (mini30 - mini10))
+                        f4_slope_30 = ((f4_40 - f4_20) / (mini40 - mini20))
+                        f4_slope_40 = ((f4_50 - f4_30) / (mini50 - mini30))
+                        f4_slope_50 = ((f4_60 - f4_40) / (mini60 - mini40))
+                        f4_slope_60 = ((f4_70 - f4_50) / (mini70 - mini50))
+                        f4_slope_70 = ((f4_80 - f4_60) / (mini80 - mini60))
+                        f4_slope_80 = ((f4_90 - f4_70) / (mini90 - mini70))
+                        f5_slope_20 = ((f5_30 - f5_10) / (mini30 - mini10))
+                        f5_slope_30 = ((f5_40 - f5_20) / (mini40 - mini20))
+                        f5_slope_40 = ((f5_50 - f5_30) / (mini50 - mini30))
+                        f5_slope_50 = ((f5_60 - f5_40) / (mini60 - mini40))
+                        f5_slope_60 = ((f5_70 - f5_50) / (mini70 - mini50))
+                        f5_slope_70 = ((f5_80 - f5_60) / (mini80 - mini60))
+                        f5_slope_80 = ((f5_90 - f5_70) / (mini90 - mini70))
+                        removeObject: currentFormant
+                        removeObject: miniSound
+                    endif
+
+                    if i_want_LSRL_formant_optimization = 0
+                        #Next we're going to select our formant object. With the formant object we can calculate formant frequencies, bandwidths, and slopes
+                        selectObject: currentFormant
+                        f1_10 = Get value at time... 1 tenpercent Hertz Linear
+                        f1_20 = Get value at time... 1 twentypercent Hertz Linear
+                        f1_30 = Get value at time... 1 thirtypercent Hertz Linear
+                        f1_40 = Get value at time... 1 fortypercent Hertz Linear
+                        f1_50 = Get value at time... 1 fiftypercent Hertz Linear
+                        f1_60 = Get value at time... 1 sixtypercent Hertz Linear
+                        f1_70 = Get value at time... 1 seventypercent Hertz Linear
+                        f1_80 = Get value at time... 1 eightypercent Hertz Linear
+                        f1_90 = Get value at time... 1 ninetypercent Hertz Linear
+                        f2_10 = Get value at time... 2 tenpercent Hertz Linear
+                        f2_20 = Get value at time... 2 twentypercent Hertz Linear
+                        f2_30 = Get value at time... 2 thirtypercent Hertz Linear
+                        f2_40 = Get value at time... 2 fortypercent Hertz Linear
+                        f2_50 = Get value at time... 2 fiftypercent Hertz Linear
+                        f2_60 = Get value at time... 2 sixtypercent Hertz Linear
+                        f2_70 = Get value at time... 2 seventypercent Hertz Linear
+                        f2_80 = Get value at time... 2 eightypercent Hertz Linear
+                        f2_90 = Get value at time... 2 ninetypercent Hertz Linear
+                        f3_10 = Get value at time... 3 tenpercent Hertz Linear
+                        f3_20 = Get value at time... 3 twentypercent Hertz Linear
+                        f3_30 = Get value at time... 3 thirtypercent Hertz Linear
+                        f3_40 = Get value at time... 3 fortypercent Hertz Linear
+                        f3_50 = Get value at time... 3 fiftypercent Hertz Linear
+                        f3_60 = Get value at time... 3 sixtypercent Hertz Linear
+                        f3_70 = Get value at time... 3 seventypercent Hertz Linear
+                        f3_80 = Get value at time... 3 eightypercent Hertz Linear
+                        f3_90 = Get value at time... 3 ninetypercent Hertz Linear
+                        f4_10 = Get value at time... 4 tenpercent Hertz Linear
+                        f4_20 = Get value at time... 4 twentypercent Hertz Linear
+                        f4_30 = Get value at time... 4 thirtypercent Hertz Linear
+                        f4_40 = Get value at time... 4 fortypercent Hertz Linear
+                        f4_50 = Get value at time... 4 fiftypercent Hertz Linear
+                        f4_60 = Get value at time... 4 sixtypercent Hertz Linear
+                        f4_70 = Get value at time... 4 seventypercent Hertz Linear
+                        f4_80 = Get value at time... 4 eightypercent Hertz Linear
+                        f4_90 = Get value at time... 4 ninetypercent Hertz Linear
+                        f5_10 = Get value at time... 5 tenpercent Hertz Linear
+                        f5_20 = Get value at time... 5 twentypercent Hertz Linear
+                        f5_30 = Get value at time... 5 thirtypercent Hertz Linear
+                        f5_40 = Get value at time... 5 fortypercent Hertz Linear
+                        f5_50 = Get value at time... 5 fiftypercent Hertz Linear
+                        f5_60 = Get value at time... 5 sixtypercent Hertz Linear
+                        f5_70 = Get value at time... 5 seventypercent Hertz Linear
+                        f5_80 = Get value at time... 5 eightypercent Hertz Linear
+                        f5_90 = Get value at time... 5 ninetypercent Hertz Linear
+                        bandwidth1_10 = Get bandwidth at time... 1 tenpercent Hertz Linear
+                        bandwidth1_20 = Get bandwidth at time... 1 twentypercent Hertz Linear
+                        bandwidth1_30 = Get bandwidth at time... 1 thirtypercent Hertz Linear
+                        bandwidth1_40 = Get bandwidth at time... 1 fortypercent Hertz Linear
+                        bandwidth1_50 = Get bandwidth at time... 1 fiftypercent Hertz Linear
+                        bandwidth1_60 = Get bandwidth at time... 1 sixtypercent Hertz Linear
+                        bandwidth1_70 = Get bandwidth at time... 1 seventypercent Hertz Linear
+                        bandwidth1_80 = Get bandwidth at time... 1 eightypercent Hertz Linear
+                        bandwidth1_90 = Get bandwidth at time... 1 ninetypercent Hertz Linear
+                        bandwidth2_10 = Get bandwidth at time... 2 tenpercent Hertz Linear
+                        bandwidth2_20 = Get bandwidth at time... 2 twentypercent Hertz Linear
+                        bandwidth2_30 = Get bandwidth at time... 2 thirtypercent Hertz Linear
+                        bandwidth2_40 = Get bandwidth at time... 2 fortypercent Hertz Linear
+                        bandwidth2_50 = Get bandwidth at time... 2 fiftypercent Hertz Linear
+                        bandwidth2_60 = Get bandwidth at time... 2 sixtypercent Hertz Linear
+                        bandwidth2_70 = Get bandwidth at time... 2 seventypercent Hertz Linear
+                        bandwidth2_80 = Get bandwidth at time... 2 eightypercent Hertz Linear
+                        bandwidth2_90 = Get bandwidth at time... 2 ninetypercent Hertz Linear
+                        bandwidth3_10 = Get bandwidth at time... 3 tenpercent Hertz Linear
+                        bandwidth3_20 = Get bandwidth at time... 3 twentypercent Hertz Linear
+                        bandwidth3_30 = Get bandwidth at time... 3 thirtypercent Hertz Linear
+                        bandwidth3_40 = Get bandwidth at time... 3 fortypercent Hertz Linear
+                        bandwidth3_50 = Get bandwidth at time... 3 fiftypercent Hertz Linear
+                        bandwidth3_60 = Get bandwidth at time... 3 sixtypercent Hertz Linear
+                        bandwidth3_70 = Get bandwidth at time... 3 seventypercent Hertz Linear
+                        bandwidth3_80 = Get bandwidth at time... 3 eightypercent Hertz Linear
+                        bandwidth3_90 = Get bandwidth at time... 3 ninetypercent Hertz Linear
+                        bandwidth4_10 = Get bandwidth at time... 4 tenpercent Hertz Linear
+                        bandwidth4_20 = Get bandwidth at time... 4 twentypercent Hertz Linear
+                        bandwidth4_30 = Get bandwidth at time... 4 thirtypercent Hertz Linear
+                        bandwidth4_40 = Get bandwidth at time... 4 fortypercent Hertz Linear
+                        bandwidth4_50 = Get bandwidth at time... 4 fiftypercent Hertz Linear
+                        bandwidth4_60 = Get bandwidth at time... 4 sixtypercent Hertz Linear
+                        bandwidth4_70 = Get bandwidth at time... 4 seventypercent Hertz Linear
+                        bandwidth4_80 = Get bandwidth at time... 4 eightypercent Hertz Linear
+                        bandwidth4_90 = Get bandwidth at time... 4 ninetypercent Hertz Linear
+                        bandwidth5_10 = Get bandwidth at time... 5 tenpercent Hertz Linear
+                        bandwidth5_20 = Get bandwidth at time... 5 twentypercent Hertz Linear
+                        bandwidth5_30 = Get bandwidth at time... 5 thirtypercent Hertz Linear
+                        bandwidth5_40 = Get bandwidth at time... 5 fortypercent Hertz Linear
+                        bandwidth5_50 = Get bandwidth at time... 5 fiftypercent Hertz Linear
+                        bandwidth5_60 = Get bandwidth at time... 5 sixtypercent Hertz Linear
+                        bandwidth5_70 = Get bandwidth at time... 5 seventypercent Hertz Linear
+                        bandwidth5_80 = Get bandwidth at time... 5 eightypercent Hertz Linear
+                        bandwidth5_90 = Get bandwidth at time... 5 ninetypercent Hertz Linear
+                        f1_slope_20 = ((f1_30 - f1_10) / (thirtypercent - tenpercent))
+                        f1_slope_30 = ((f1_40 - f1_20) / (fortypercent - twentypercent))
+                        f1_slope_40 = ((f1_50 - f1_30) / (fiftypercent - thirtypercent))
+                        f1_slope_50 = ((f1_60 - f1_40) / (sixtypercent - fortypercent))
+                        f1_slope_60 = ((f1_70 - f1_50) / (seventypercent - fiftypercent))
+                        f1_slope_70 = ((f1_80 - f1_60) / (eightypercent - sixtypercent))
+                        f1_slope_80 = ((f1_90 - f1_70) / (ninetypercent - seventypercent))
+                        f2_slope_20 = ((f2_30 - f2_10) / (thirtypercent - tenpercent))
+                        f2_slope_30 = ((f2_40 - f2_20) / (fortypercent - twentypercent))
+                        f2_slope_40 = ((f2_50 - f2_30) / (fiftypercent - thirtypercent))
+                        f2_slope_50 = ((f2_60 - f2_40) / (sixtypercent - fortypercent))
+                        f2_slope_60 = ((f2_70 - f2_50) / (seventypercent - fiftypercent))
+                        f2_slope_70 = ((f2_80 - f2_60) / (eightypercent - sixtypercent))
+                        f2_slope_80 = ((f2_90 - f2_70) / (ninetypercent - seventypercent))
+                        f3_slope_20 = ((f3_30 - f3_10) / (thirtypercent - tenpercent))
+                        f3_slope_30 = ((f3_40 - f3_20) / (fortypercent - twentypercent))
+                        f3_slope_40 = ((f3_50 - f3_30) / (fiftypercent - thirtypercent))
+                        f3_slope_50 = ((f3_60 - f3_40) / (sixtypercent - fortypercent))
+                        f3_slope_60 = ((f3_70 - f3_50) / (seventypercent - fiftypercent))
+                        f3_slope_70 = ((f3_80 - f3_60) / (eightypercent - sixtypercent))
+                        f3_slope_80 = ((f3_90 - f3_70) / (ninetypercent - seventypercent))
+                        f4_slope_20 = ((f4_30 - f4_10) / (thirtypercent - tenpercent))
+                        f4_slope_30 = ((f4_40 - f4_20) / (fortypercent - twentypercent))
+                        f4_slope_40 = ((f4_50 - f4_30) / (fiftypercent - thirtypercent))
+                        f4_slope_50 = ((f4_60 - f4_40) / (sixtypercent - fortypercent))
+                        f4_slope_60 = ((f4_70 - f4_50) / (seventypercent - fiftypercent))
+                        f4_slope_70 = ((f4_80 - f4_60) / (eightypercent - sixtypercent))
+                        f4_slope_80 = ((f4_90 - f4_70) / (ninetypercent - seventypercent))
+                        f5_slope_20 = ((f5_30 - f5_10) / (thirtypercent - tenpercent))
+                        f5_slope_30 = ((f5_40 - f5_20) / (fortypercent - twentypercent))
+                        f5_slope_40 = ((f5_50 - f5_30) / (fiftypercent - thirtypercent))
+                        f5_slope_50 = ((f5_60 - f5_40) / (sixtypercent - fortypercent))
+                        f5_slope_60 = ((f5_70 - f5_50) / (seventypercent - fiftypercent))
+                        f5_slope_70 = ((f5_80 - f5_60) / (eightypercent - sixtypercent))
+                        f5_slope_80 = ((f5_90 - f5_70) / (ninetypercent - seventypercent))
+                    endif
+
+                    velo_20 = sqrt((f2_slope_20)^2 + (f1_slope_20)^2)
+                    velo_30 = sqrt((f2_slope_30)^2 + (f1_slope_30)^2)
+                    velo_40 = sqrt((f2_slope_40)^2 + (f1_slope_40)^2)
+                    velo_50 = sqrt((f2_slope_50)^2 + (f1_slope_50)^2)
+                    velo_60 = sqrt((f2_slope_60)^2 + (f1_slope_60)^2)
+                    velo_70 = sqrt((f2_slope_70)^2 + (f1_slope_70)^2)
+                    velo_80 = sqrt((f2_slope_80)^2 + (f1_slope_80)^2)
+
+            minVelo = velo_20
+            art_max_percentile = 20
+            
+            if minVelo > velo_20
+                minVelo = velo_20
+                art_max_percentile = 20
+            endif
+            if minVelo > velo_30
+                minVelo = velo_30
+                art_max_percentile = 30
+            endif
+            if minVelo > velo_40
+                minVelo = velo_40
+                art_max_percentile = 40
+            endif
+            if minVelo > velo_50
+                minVelo = velo_50
+                art_max_percentile = 50
+            endif
+            if minVelo > velo_60
+                minVelo = velo_60
+                art_max_percentile = 60
+            endif
+            if minVelo > velo_70
+                minVelo = velo_70
+                art_max_percentile = 70
+            endif
+            if minVelo > velo_80
+                minVelo = velo_80
+                art_max_percentile = 80
+            endif
+
+                    #Gather harmonicity.
+                    selectObject: currentHarmonicity
+                    harmonicity_10 = Get value at time... tenpercent cubic
+                    harmonicity_20 = Get value at time... twentypercent cubic
+                    harmonicity_30 = Get value at time... thirtypercent cubic
+                    harmonicity_40 = Get value at time... fortypercent cubic
+                    harmonicity_50 = Get value at time... fiftypercent cubic
+                    harmonicity_60 = Get value at time... sixtypercent cubic
+                    harmonicity_70 = Get value at time... seventypercent cubic
+                    harmonicity_80 = Get value at time... eightypercent cubic
+                    harmonicity_90 = Get value at time... ninetypercent cubic
+
+                    #This is the intensity section. We're going to gather mean intensities throughout the sound.
+                    #We're also going to gather min, and max intensity.
+                    #Lastly, we're going to include an intensity difference measure, which comes from Bongiovanni 2015 and is used for analysis of nasal stops.
+                    selectObject: currentIntensity
+                    intensity_10 = Get mean... thisPhonemeStartTime tenpercent dB
+                    intensity_20 = Get mean... tenpercent twentypercent dB
+                    intensity_30 = Get mean... twentypercent thirtypercent dB
+                    intensity_40 = Get mean... thirtypercent fortypercent dB
+                    intensity_50 = Get mean... fortypercent fiftypercent dB
+                    intensity_60 = Get mean... fiftypercent sixtypercent dB
+                    intensity_70 = Get mean... sixtypercent seventypercent dB
+                    intensity_80 = Get mean... seventypercent eightypercent dB
+                    intensity_90 = Get mean... eightypercent ninetypercent dB
+                    intensity_100 = Get mean... ninetypercent thisPhonemeEndTime dB
+                    intensity_max = Get maximum... thisPhonemeStartTime thisPhonemeEndTime Parabolic
+                    intensity_min = Get minimum... thisPhonemeStartTime thisPhonemeEndTime Parabolic
+                    if currentInterval > 1
+                        selectObject: currentTextGrid
+                        previous_initial_time = Get start point: phone_tier_number, precederNumber
+                        selectObject: currentIntensity
+                        previous_intensity_minimum = Get minimum... previous_initial_time thisPhonemeStartTime Parabolic
+                        intensity_difference = intensity_max - previous_intensity_minimum
+                    endif
+
+                    ############# A1-P0 ###
+                    p0_approx_10 = f1_10 - f0_10
+                    p0_filterLowerBound_10 = p0_approx_10 - f0_10 / 4
+                    p0_filterUpperBound_10 = p0_approx_10 + f0_10 / 4
+                    a1_filterLowerBound_10 = f1_10 - f0_10 / 4
+                    a1_filterUpperBound_10 = f1_10 + f0_10 / 4
+                    segmentDuration_10 = duration * 0.1
+                    mockLowerBound_10 = 6.45 / segmentDuration_10
+                    p0_filterLowerBound_10$ = fixed$(p0_filterLowerBound_10, 10)
+
+                    p0_approx_20 = f1_20 - f0_20
+                    p0_filterLowerBound_20 = p0_approx_20 - f0_20 / 4
+                    p0_filterUpperBound_20 = p0_approx_20 + f0_20 / 4
+                    a1_filterLowerBound_20 = f1_20 - f0_20 / 4
+                    a1_filterUpperBound_20 = f1_20 + f0_20 / 4
+                    segmentDuration_20 = duration * 0.1
+                    mockLowerBound_20 = 6.45 / segmentDuration_20
+                    p0_filterLowerBound_20$ = fixed$(p0_filterLowerBound_20, 10)
+
+                    p0_approx_30 = f1_30 - f0_30
+                    p0_filterLowerBound_30 = p0_approx_30 - f0_30 / 4
+                    p0_filterUpperBound_30 = p0_approx_30 + f0_30 / 4
+                    a1_filterLowerBound_30 = f1_30 - f0_30 / 4
+                    a1_filterUpperBound_30 = f1_30 + f0_30 / 4
+                    segmentDuration_30 = duration * 0.1
+                    mockLowerBound_30 = 6.45 / segmentDuration_30
+                    p0_filterLowerBound_30$ = fixed$(p0_filterLowerBound_30, 10)
+
+                    p0_approx_40 = f1_40 - f0_40
+                    p0_filterLowerBound_40 = p0_approx_40 - f0_40 / 4
+                    p0_filterUpperBound_40 = p0_approx_40 + f0_40 / 4
+                    a1_filterLowerBound_40 = f1_40 - f0_40 / 4
+                    a1_filterUpperBound_40 = f1_40 + f0_40 / 4
+                    segmentDuration_40 = duration * 0.1
+                    mockLowerBound_40 = 6.45 / segmentDuration_40
+                    p0_filterLowerBound_40$ = fixed$(p0_filterLowerBound_40, 10)
+
+                    p0_approx_50 = f1_50 - f0_50
+                    p0_filterLowerBound_50 = p0_approx_50 - f0_50 / 4
+                    p0_filterUpperBound_50 = p0_approx_50 + f0_50 / 4
+                    a1_filterLowerBound_50 = f1_50 - f0_50 / 4
+                    a1_filterUpperBound_50 = f1_50 + f0_50 / 4
+                    segmentDuration_50 = duration * 0.1
+                    mockLowerBound_50 = 6.45 / segmentDuration_50
+                    p0_filterLowerBound_50$ = fixed$(p0_filterLowerBound_50, 10)
+
+                    p0_approx_60 = f1_60 - f0_60
+                    p0_filterLowerBound_60 = p0_approx_60 - f0_60 / 4
+                    p0_filterUpperBound_60 = p0_approx_60 + f0_60 / 4
+                    a1_filterLowerBound_60 = f1_60 - f0_60 / 4
+                    a1_filterUpperBound_60 = f1_60 + f0_60 / 4
+                    segmentDuration_60 = duration * 0.1
+                    mockLowerBound_60 = 6.45 / segmentDuration_60
+                    p0_filterLowerBound_60$ = fixed$(p0_filterLowerBound_60, 10)
+
+                    p0_approx_70 = f1_70 - f0_70
+                    p0_filterLowerBound_70 = p0_approx_70 - f0_70 / 4
+                    p0_filterUpperBound_70 = p0_approx_70 + f0_70 / 4
+                    a1_filterLowerBound_70 = f1_70 - f0_70 / 4
+                    a1_filterUpperBound_70 = f1_70 + f0_70 / 4
+                    segmentDuration_70 = duration * 0.1
+                    mockLowerBound_70 = 6.45 / segmentDuration_70
+                    p0_filterLowerBound_70$ = fixed$(p0_filterLowerBound_70, 10)
+
+                    p0_approx_80 = f1_80 - f0_80
+                    p0_filterLowerBound_80 = p0_approx_80 - f0_80 / 4
+                    p0_filterUpperBound_80 = p0_approx_80 + f0_80 / 4
+                    a1_filterLowerBound_80 = f1_80 - f0_80 / 4
+                    a1_filterUpperBound_80 = f1_80 + f0_80 / 4
+                    segmentDuration_80 = duration * 0.1
+                    mockLowerBound_80 = 6.45 / segmentDuration_80
+                    p0_filterLowerBound_80$ = fixed$(p0_filterLowerBound_80, 10)
+
+                    p0_approx_90 = f1_90 - f0_90
+                    p0_filterLowerBound_90 = p0_approx_90 - f0_90 / 4
+                    p0_filterUpperBound_90 = p0_approx_90 + f0_90 / 4
+                    a1_filterLowerBound_90 = f1_90 - f0_90 / 4
+                    a1_filterUpperBound_90 = f1_90 + f0_90 / 4
+                    segmentDuration_90 = duration * 0.1
+                    mockLowerBound_90 = 6.45 / segmentDuration_90
+                    p0_filterLowerBound_90$ = fixed$(p0_filterLowerBound_90, 10)
+
+                    # The a1p0 code doesn't work right now - this is on the to-do list for me to finish.
+                    # Email me if you need to do a study that extracts a1p0 and want to use this script.
+                    a1p0_00 = 99999
+                    a1p0_10 = 99999
+                    a1p0_20 = 99999
+                    a1p0_30 = 99999
+                    a1p0_40 = 99999
+                    a1p0_50 = 99999
+                    a1p0_60 = 99999
+                    a1p0_70 = 99999
+                    a1p0_80 = 99999
+                    a1p0_90 = 99999
+                    a1 = 99999
+                    p0 = 0
+                    selectObject: currentSound
+                    currentSoundChunk = Extract part... thisPhonemeStartTime thisPhonemeEndTime rectangular 1 on
+                    selectObject: currentSoundChunk
+                    miniStart = Get start time
+                    miniEnd = Get end time
+                    miniDuration = miniStart - miniEnd
+                    mini10 = miniDuration * 0.1
+                    mini20 = miniDuration * 0.2
+                    mini30 = miniDuration * 0.3
+                    mini40 = miniDuration * 0.4
+                    mini50 = miniDuration * 0.5
+                    mini60 = miniDuration * 0.6
+                    mini70 = miniDuration * 0.7
+                    mini80 = miniDuration * 0.8
+                    mini90 = miniDuration * 0.9
+                    #This section measures a1
+                    procedure a1p0_proc: timea timeb a1_filterLowerBound a1_filterUpperBound p0_filterLowerBound p0_filterUpperBound mockLowerBound p0_filterLowerBound$
+                        if p0_filterLowerBound$ <> "--undefined--"
+                            selectObject: currentSoundChunk
+                            currentSoundChunk2 = Filter (pass Hann band)... a1_filterLowerBound a1_filterUpperBound 1
+                            currentIntensityChunk = To Intensity... mockLowerBound 0 yes
+                            selectObject: currentSound
+                            currentSoundChunk3 = Extract part... thisPhonemeStartTime thisPhonemeEndTime rectangular 1 on
+                            selectObject: currentSoundChunk3
+                            currentSoundChunk4 = Filter (pass Hann band)... p0_filterLowerBound p0_filterUpperBound 1
+                            selectObject: currentSoundChunk4
+                            currentIntensityChunk2 = To Intensity... mockLowerBound 0 yes
+                            selectObject: currentIntensityChunk
+                            a1 = Get maximum... timea timeb sinc70
+                            selectObject: currentIntensityChunk2
+                            p0 = Get maximum... timea timeb sinc70
+                            removeObject: currentSoundChunk2
+                            removeObject: currentIntensityChunk
+                            removeObject: currentSoundChunk3
+                            removeObject: currentSoundChunk4
+                            removeObject: currentIntensityChunk2
+                        endif
+                    endproc
+                    @a1p0_proc: mini10, mini20, a1_filterLowerBound_10, a1_filterUpperBound_10, p0_filterLowerBound_10, p0_filterUpperBound_10, mockLowerBound_10, p0_filterLowerBound_10$
+                    a1p0_10 = a1 - p0
+                    @a1p0_proc: mini20, mini30, a1_filterLowerBound_20, a1_filterUpperBound_20, p0_filterLowerBound_20, p0_filterUpperBound_20, mockLowerBound_20, p0_filterLowerBound_20$
+                    a1p0_20 = a1 - p0
+                    @a1p0_proc: mini30, mini40, a1_filterLowerBound_30, a1_filterUpperBound_30, p0_filterLowerBound_30, p0_filterUpperBound_30, mockLowerBound_30, p0_filterLowerBound_30$
+                    a1p0_30 = a1 - p0
+                    @a1p0_proc: mini40, mini50, a1_filterLowerBound_40, a1_filterUpperBound_40, p0_filterLowerBound_40, p0_filterUpperBound_40, mockLowerBound_40, p0_filterLowerBound_40$
+                    a1p0_40 = a1 - p0
+                    @a1p0_proc: mini50, mini60, a1_filterLowerBound_50, a1_filterUpperBound_50, p0_filterLowerBound_50, p0_filterUpperBound_50, mockLowerBound_50, p0_filterLowerBound_50$
+                    a1p0_50 = a1 - p0
+                    @a1p0_proc: mini60, mini70, a1_filterLowerBound_60, a1_filterUpperBound_60, p0_filterLowerBound_60, p0_filterUpperBound_60, mockLowerBound_60, p0_filterLowerBound_60$
+                    a1p0_60 = a1 - p0
+                    @a1p0_proc: mini70, mini80, a1_filterLowerBound_70, a1_filterUpperBound_70, p0_filterLowerBound_70, p0_filterUpperBound_70, mockLowerBound_70, p0_filterLowerBound_70$
+                    a1p0_70 = a1 - p0
+                    @a1p0_proc: mini80, mini90, a1_filterLowerBound_80, a1_filterUpperBound_80, p0_filterLowerBound_80, p0_filterUpperBound_80, mockLowerBound_80, p0_filterLowerBound_80$
+                    a1p0_80 = a1 - p0
+                    @a1p0_proc: mini90, thisPhonemeEndTime, a1_filterLowerBound_90, a1_filterUpperBound_90, p0_filterLowerBound_90, p0_filterUpperBound_90, mockLowerBound_90, p0_filterLowerBound_90$
+                    a1p0_90 = a1 - p0
+                    removeObject: currentSoundChunk
+
+                    # Now we select the Point Process object to collect Jitter and Shimmer data. For some reason, the shimmer documentation is really sparse.
+                    # The values arguments of the Jitter and Shimmer functions are startTime endTime periodFloor periodCeiling and maximumPeriodFactor which Boersma calls "the largest possible difference between consecutive intervals that will be used in the computation". Jitter documentation is fine, and shimmer commands follow the same structure as jitter.
+                    selectObject: currentPointProcess
+                    jitter = Get jitter (local, absolute)... thisPhonemeStartTime thisPhonemeEndTime 0.0001 0.02 1.3
+
+                    selectObject: currentSound, currentPointProcess
+                    shimmer = Get shimmer (local): thisPhonemeStartTime, thisPhonemeEndTime, 0.0001, 0.02, 1.3, 1.6
+                    
+                    # This is the final acoustical extraction, which creates spectrum objects.
+                    # Praat's spectrum creation is **super** slow, so it's a requirement to extract sound chunks to make tiny spectral objects first.
+                    selectObject: currentSound
+                    currentSoundChunk = Extract part... thisPhonemeStartTime thisPhonemeEndTime rectangular 1 on
+                    selectObject: currentSoundChunk
+                    currentSpectrum = To Spectrum... yes
+                    selectObject: currentSpectrum
+                    cog = Get centre of gravity... 2
+                    cogSD = Get standard deviation... 2
+                    skewness = Get skewness... 2
+                    kurtosis = Get kurtosis... 2
+                    removeObject: currentSpectrum
+                    removeObject: currentSoundChunk
+
+                    selectObject: table
+                    Append row
+                    current_row = Get number of rows
+
+                    # ─────────── basic identifiers ───────────
+                    Set string value:  current_row, "file_name",             currentFile$
+                    Set numeric value: current_row, "start_time",            thisPhonemeStartTime
+                    Set numeric value: current_row, "end_time",              thisPhonemeEndTime
+                    Set string value:  current_row, "phoneme",               thisPhoneme$
+                    Set string value:  current_row, "word",                  currentWord$
+                    Set string value:  current_row, "task_type",             currentTask$
+                    Set numeric value:  current_row, "duration",             duration
+                    Set string value:  current_row, "preceding_phone",       precedingPhoneme$
+                    Set string value:  current_row, "following_phone",       followingPhoneme$
+                    if i_want_LSRL_formant_optimization = 1
+                        Set numeric value: current_row, "formant_ceiling",       formantCeiling
+                    endif
+
+                    # ─────────── F0 percentiles ───────────
+                    Set numeric value: current_row, "f0_10",   f0_10
+                    Set numeric value: current_row, "f0_20",   f0_20
+                    Set numeric value: current_row, "f0_30",   f0_30
+                    Set numeric value: current_row, "f0_40",   f0_40
+                    Set numeric value: current_row, "f0_50",   f0_50
+                    Set numeric value: current_row, "f0_60",   f0_60
+                    Set numeric value: current_row, "f0_70",   f0_70
+                    Set numeric value: current_row, "f0_80",   f0_80
+                    Set numeric value: current_row, "f0_90",   f0_90
+
+                    # ─────────── F1 percentiles ───────────
+                    Set numeric value: current_row, "f1_10",   f1_10
+                    Set numeric value: current_row, "f1_20",   f1_20
+                    Set numeric value: current_row, "f1_30",   f1_30
+                    Set numeric value: current_row, "f1_40",   f1_40
+                    Set numeric value: current_row, "f1_50",   f1_50
+                    Set numeric value: current_row, "f1_60",   f1_60
+                    Set numeric value: current_row, "f1_70",   f1_70
+                    Set numeric value: current_row, "f1_80",   f1_80
+                    Set numeric value: current_row, "f1_90",   f1_90
+
+                    # ─────────── F2 percentiles ───────────
+                    Set numeric value: current_row, "f2_10",   f2_10
+                    Set numeric value: current_row, "f2_20",   f2_20
+                    Set numeric value: current_row, "f2_30",   f2_30
+                    Set numeric value: current_row, "f2_40",   f2_40
+                    Set numeric value: current_row, "f2_50",   f2_50
+                    Set numeric value: current_row, "f2_60",   f2_60
+                    Set numeric value: current_row, "f2_70",   f2_70
+                    Set numeric value: current_row, "f2_80",   f2_80
+                    Set numeric value: current_row, "f2_90",   f2_90
+
+                    # ─────────── F3 percentiles ───────────
+                    Set numeric value: current_row, "f3_10",   f3_10
+                    Set numeric value: current_row, "f3_20",   f3_20
+                    Set numeric value: current_row, "f3_30",   f3_30
+                    Set numeric value: current_row, "f3_40",   f3_40
+                    Set numeric value: current_row, "f3_50",   f3_50
+                    Set numeric value: current_row, "f3_60",   f3_60
+                    Set numeric value: current_row, "f3_70",   f3_70
+                    Set numeric value: current_row, "f3_80",   f3_80
+                    Set numeric value: current_row, "f3_90",   f3_90
+
+                    # ─────────── F4 percentiles ───────────
+                    Set numeric value: current_row, "f4_10",   f4_10
+                    Set numeric value: current_row, "f4_20",   f4_20
+                    Set numeric value: current_row, "f4_30",   f4_30
+                    Set numeric value: current_row, "f4_40",   f4_40
+                    Set numeric value: current_row, "f4_50",   f4_50
+                    Set numeric value: current_row, "f4_60",   f4_60
+                    Set numeric value: current_row, "f4_70",   f4_70
+                    Set numeric value: current_row, "f4_80",   f4_80
+                    Set numeric value: current_row, "f4_90",   f4_90
+
+                    # ─────────── F5 percentiles ───────────
+                    Set numeric value: current_row, "f5_10",   f5_10
+                    Set numeric value: current_row, "f5_20",   f5_20
+                    Set numeric value: current_row, "f5_30",   f5_30
+                    Set numeric value: current_row, "f5_40",   f5_40
+                    Set numeric value: current_row, "f5_50",   f5_50
+                    Set numeric value: current_row, "f5_60",   f5_60
+                    Set numeric value: current_row, "f5_70",   f5_70
+                    Set numeric value: current_row, "f5_80",   f5_80
+                    Set numeric value: current_row, "f5_90",   f5_90
+
+                    # ─────────── Bandwidths ───────────
+                    # Bandwidth 1
+                    Set numeric value: current_row, "bandwidth1_10", bandwidth1_10
+                    Set numeric value: current_row, "bandwidth1_20", bandwidth1_20
+                    Set numeric value: current_row, "bandwidth1_30", bandwidth1_30
+                    Set numeric value: current_row, "bandwidth1_40", bandwidth1_40
+                    Set numeric value: current_row, "bandwidth1_50", bandwidth1_50
+                    Set numeric value: current_row, "bandwidth1_60", bandwidth1_60
+                    Set numeric value: current_row, "bandwidth1_70", bandwidth1_70
+                    Set numeric value: current_row, "bandwidth1_80", bandwidth1_80
+                    Set numeric value: current_row, "bandwidth1_90", bandwidth1_90
+                    # Bandwidth 2
+                    Set numeric value: current_row, "bandwidth2_10", bandwidth2_10
+                    Set numeric value: current_row, "bandwidth2_20", bandwidth2_20
+                    Set numeric value: current_row, "bandwidth2_30", bandwidth2_30
+                    Set numeric value: current_row, "bandwidth2_40", bandwidth2_40
+                    Set numeric value: current_row, "bandwidth2_50", bandwidth2_50
+                    Set numeric value: current_row, "bandwidth2_60", bandwidth2_60
+                    Set numeric value: current_row, "bandwidth2_70", bandwidth2_70
+                    Set numeric value: current_row, "bandwidth2_80", bandwidth2_80
+                    Set numeric value: current_row, "bandwidth2_90", bandwidth2_90
+                    # Bandwidth 3
+                    Set numeric value: current_row, "bandwidth3_10", bandwidth3_10
+                    Set numeric value: current_row, "bandwidth3_20", bandwidth3_20
+                    Set numeric value: current_row, "bandwidth3_30", bandwidth3_30
+                    Set numeric value: current_row, "bandwidth3_40", bandwidth3_40
+                    Set numeric value: current_row, "bandwidth3_50", bandwidth3_50
+                    Set numeric value: current_row, "bandwidth3_60", bandwidth3_60
+                    Set numeric value: current_row, "bandwidth3_70", bandwidth3_70
+                    Set numeric value: current_row, "bandwidth3_80", bandwidth3_80
+                    Set numeric value: current_row, "bandwidth3_90", bandwidth3_90
+                    # Bandwidth 4
+                    Set numeric value: current_row, "bandwidth4_10", bandwidth4_10
+                    Set numeric value: current_row, "bandwidth4_20", bandwidth4_20
+                    Set numeric value: current_row, "bandwidth4_30", bandwidth4_30
+                    Set numeric value: current_row, "bandwidth4_40", bandwidth4_40
+                    Set numeric value: current_row, "bandwidth4_50", bandwidth4_50
+                    Set numeric value: current_row, "bandwidth4_60", bandwidth4_60
+                    Set numeric value: current_row, "bandwidth4_70", bandwidth4_70
+                    Set numeric value: current_row, "bandwidth4_80", bandwidth4_80
+                    Set numeric value: current_row, "bandwidth4_90", bandwidth4_90
+                    # Bandwidth 5
+                    Set numeric value: current_row, "bandwidth5_10", bandwidth5_10
+                    Set numeric value: current_row, "bandwidth5_20", bandwidth5_20
+                    Set numeric value: current_row, "bandwidth5_30", bandwidth5_30
+                    Set numeric value: current_row, "bandwidth5_40", bandwidth5_40
+                    Set numeric value: current_row, "bandwidth5_50", bandwidth5_50
+                    Set numeric value: current_row, "bandwidth5_60", bandwidth5_60
+                    Set numeric value: current_row, "bandwidth5_70", bandwidth5_70
+                    Set numeric value: current_row, "bandwidth5_80", bandwidth5_80
+                    Set numeric value: current_row, "bandwidth5_90", bandwidth5_90
+
+                    # ─────────── Formant slopes ───────────
+                    # F1
+                    Set numeric value: current_row, "f1_slope_20", f1_slope_20
+                    Set numeric value: current_row, "f1_slope_30", f1_slope_30
+                    Set numeric value: current_row, "f1_slope_40", f1_slope_40
+                    Set numeric value: current_row, "f1_slope_50", f1_slope_50
+                    Set numeric value: current_row, "f1_slope_60", f1_slope_60
+                    Set numeric value: current_row, "f1_slope_70", f1_slope_70
+                    Set numeric value: current_row, "f1_slope_80", f1_slope_80
+                    # F2
+                    Set numeric value: current_row, "f2_slope_20", f2_slope_20
+                    Set numeric value: current_row, "f2_slope_30", f2_slope_30
+                    Set numeric value: current_row, "f2_slope_40", f2_slope_40
+                    Set numeric value: current_row, "f2_slope_50", f2_slope_50
+                    Set numeric value: current_row, "f2_slope_60", f2_slope_60
+                    Set numeric value: current_row, "f2_slope_70", f2_slope_70
+                    Set numeric value: current_row, "f2_slope_80", f2_slope_80
+                    # F3
+                    Set numeric value: current_row, "f3_slope_20", f3_slope_20
+                    Set numeric value: current_row, "f3_slope_30", f3_slope_30
+                    Set numeric value: current_row, "f3_slope_40", f3_slope_40
+                    Set numeric value: current_row, "f3_slope_50", f3_slope_50
+                    Set numeric value: current_row, "f3_slope_60", f3_slope_60
+                    Set numeric value: current_row, "f3_slope_70", f3_slope_70
+                    Set numeric value: current_row, "f3_slope_80", f3_slope_80
+                    # F4
+                    Set numeric value: current_row, "f4_slope_20", f4_slope_20
+                    Set numeric value: current_row, "f4_slope_30", f4_slope_30
+                    Set numeric value: current_row, "f4_slope_40", f4_slope_40
+                    Set numeric value: current_row, "f4_slope_50", f4_slope_50
+                    Set numeric value: current_row, "f4_slope_60", f4_slope_60
+                    Set numeric value: current_row, "f4_slope_70", f4_slope_70
+                    Set numeric value: current_row, "f4_slope_80", f4_slope_80
+                    # F5
+                    Set numeric value: current_row, "f5_slope_20", f5_slope_20
+                    Set numeric value: current_row, "f5_slope_30", f5_slope_30
+                    Set numeric value: current_row, "f5_slope_40", f5_slope_40
+                    Set numeric value: current_row, "f5_slope_50", f5_slope_50
+                    Set numeric value: current_row, "f5_slope_60", f5_slope_60
+                    Set numeric value: current_row, "f5_slope_70", f5_slope_70
+                    Set numeric value: current_row, "f5_slope_80", f5_slope_80
+
+                    # ─────────── Articulatory Maximum ────────
+                    Set numeric value: current_row, "articulatory_maximum", art_max_percentile
+
+                    # ─────────── Harmonicity (HNR) ───────────
+                    Set numeric value: current_row, "harmonicity_10",  harmonicity_10
+                    Set numeric value: current_row, "harmonicity_20",  harmonicity_20
+                    Set numeric value: current_row, "harmonicity_30",  harmonicity_30
+                    Set numeric value: current_row, "harmonicity_40",  harmonicity_40
+                    Set numeric value: current_row, "harmonicity_50",  harmonicity_50
+                    Set numeric value: current_row, "harmonicity_60",  harmonicity_60
+                    Set numeric value: current_row, "harmonicity_70",  harmonicity_70
+                    Set numeric value: current_row, "harmonicity_80",  harmonicity_80
+                    Set numeric value: current_row, "harmonicity_90",  harmonicity_90
+
+                    # ─────────── Intensity measures ───────────
+                    Set numeric value: current_row, "intensity_10",     intensity_10
+                    Set numeric value: current_row, "intensity_20",     intensity_20
+                    Set numeric value: current_row, "intensity_30",     intensity_30
+                    Set numeric value: current_row, "intensity_40",     intensity_40
+                    Set numeric value: current_row, "intensity_50",     intensity_50
+                    Set numeric value: current_row, "intensity_60",     intensity_60
+                    Set numeric value: current_row, "intensity_70",     intensity_70
+                    Set numeric value: current_row, "intensity_80",     intensity_80
+                    Set numeric value: current_row, "intensity_90",     intensity_90
+                    Set numeric value: current_row, "intensity_100",    intensity_100
+                    Set numeric value: current_row, "intensity_max",    intensity_max
+                    Set numeric value: current_row, "intensity_min",    intensity_min
+                    Set numeric value: current_row, "intensity_difference", intensity_difference
+
+                    # ─────────── Voice‑quality & spectral stats ───────────
+                    Set numeric value: current_row, "jitter",    jitter
+                    Set numeric value: current_row, "shimmer",   shimmer
+                    Set numeric value: current_row, "cog",       cog
+                    Set numeric value: current_row, "cogSD",     cogSD
+                    Set numeric value: current_row, "skewness",  skewness
+                    Set numeric value: current_row, "kurtosis",  kurtosis
+
+                    # ─────────── Nasality Measurements ───────────
+                    Set numeric value: current_row, "a1p0_10",      a1p0_10
+                    Set numeric value: current_row, "a1p0_20",      a1p0_20
+                    Set numeric value: current_row, "a1p0_30",      a1p0_30
+                    Set numeric value: current_row, "a1p0_40",      a1p0_40
+                    Set numeric value: current_row, "a1p0_50",      a1p0_50
+                    Set numeric value: current_row, "a1p0_60",      a1p0_60
+                    Set numeric value: current_row, "a1p0_70",      a1p0_70
+                    Set numeric value: current_row, "a1p0_80",      a1p0_80
+                    Set numeric value: current_row, "a1p0_90",      a1p0_90
                 endif
             endif
-
-            #Now we need to note all of the key timestamps. These are the start points, end points, and 10% increments throughout the sound.
-            #One quirk about praat is that you can convert numbers into strings by using the fixed$ notation, that you'll see a lot of going forward.
-            thisPhonemeStartTime$ = fixed$(thisPhonemeStartTime, 4)
-            thisPhonemeEndTime$ = fixed$(thisPhonemeEndTime, 4)
-            duration = thisPhonemeEndTime - thisPhonemeStartTime
-            duration$ = fixed$(duration, 4)
-            tenpercent = thisPhonemeStartTime + duration/10
-            twentypercent = thisPhonemeStartTime + duration/5
-            thirtypercent = thisPhonemeStartTime + (duration*3)/10
-            fortypercent = thisPhonemeStartTime + (duration*2)/5
-            fiftypercent = thisPhonemeStartTime + duration/2
-            sixtypercent = thisPhonemeStartTime + (duration*3)/5
-            seventypercent = thisPhonemeStartTime + (duration*7)/10
-            eightypercent = thisPhonemeStartTime + (duration*4)/5
-            ninetypercent = thisPhonemeStartTime + (duration*9)/10
-
-            #Collects optional intervals, such as task type and word.
-            currentWord$ = "--undefined--"
-            if wordTierNumber <> 0
-                currentWordInterval = Get interval at time: wordTierNumber, fiftypercent
-                currentWord$ = Get label of interval: wordTierNumber, currentWordInterval
-            endif
-            currentTask$ = "--undefined--"
-            if taskTierNumber <> 0
-                currentTaskInterval = Get interval at time: taskTierNumber, fiftypercent
-                currentTask$ = Get label of interval: taskTierNumber, currentTaskInterval
-            endif
-
-            #We're going to first select our Pitch object and then gather pitch at the 10% through 90% points
-            selectObject: currentPitch
-            f0_10 = Get value at time... tenpercent Hertz Linear
-            f0_20 = Get value at time... twentypercent Hertz Linear
-            f0_30 = Get value at time... thirtypercent Hertz Linear
-            f0_40 = Get value at time... fortypercent Hertz Linear
-            f0_50 = Get value at time... fiftypercent Hertz Linear
-            f0_60 = Get value at time... sixtypercent Hertz Linear
-            f0_70 = Get value at time... seventypercent Hertz Linear
-            f0_80 = Get value at time... eightypercent Hertz Linear
-            f0_90 = Get value at time... ninetypercent Hertz Linear
-            f0_10$ = fixed$(f0_10, 4)
-            f0_20$ = fixed$(f0_20, 4)
-            f0_30$ = fixed$(f0_30, 4)
-            f0_40$ = fixed$(f0_40, 4)
-            f0_50$ = fixed$(f0_50, 4)
-            f0_60$ = fixed$(f0_60, 4)
-            f0_70$ = fixed$(f0_70, 4)
-            f0_80$ = fixed$(f0_80, 4)
-            f0_90$ = fixed$(f0_90, 4)
-
-            #Next we're going to select our formant object. With the formant object we can calculate formant frequencies, bandwidths, and slopes
-            selectObject: currentFormant
-            f1_10 = Get value at time... 1 tenpercent Hertz Linear
-            f1_20 = Get value at time... 1 twentypercent Hertz Linear
-            f1_30 = Get value at time... 1 thirtypercent Hertz Linear
-            f1_40 = Get value at time... 1 fortypercent Hertz Linear
-            f1_50 = Get value at time... 1 fiftypercent Hertz Linear
-            f1_60 = Get value at time... 1 sixtypercent Hertz Linear
-            f1_70 = Get value at time... 1 seventypercent Hertz Linear
-            f1_80 = Get value at time... 1 eightypercent Hertz Linear
-            f1_90 = Get value at time... 1 ninetypercent Hertz Linear
-            f2_10 = Get value at time... 2 tenpercent Hertz Linear
-            f2_20 = Get value at time... 2 twentypercent Hertz Linear
-            f2_30 = Get value at time... 2 thirtypercent Hertz Linear
-            f2_40 = Get value at time... 2 fortypercent Hertz Linear
-            f2_50 = Get value at time... 2 fiftypercent Hertz Linear
-            f2_60 = Get value at time... 2 sixtypercent Hertz Linear
-            f2_70 = Get value at time... 2 seventypercent Hertz Linear
-            f2_80 = Get value at time... 2 eightypercent Hertz Linear
-            f2_90 = Get value at time... 2 ninetypercent Hertz Linear
-            f3_10 = Get value at time... 3 tenpercent Hertz Linear
-            f3_20 = Get value at time... 3 twentypercent Hertz Linear
-            f3_30 = Get value at time... 3 thirtypercent Hertz Linear
-            f3_40 = Get value at time... 3 fortypercent Hertz Linear
-            f3_50 = Get value at time... 3 fiftypercent Hertz Linear
-            f3_60 = Get value at time... 3 sixtypercent Hertz Linear
-            f3_70 = Get value at time... 3 seventypercent Hertz Linear
-            f3_80 = Get value at time... 3 eightypercent Hertz Linear
-            f3_90 = Get value at time... 3 ninetypercent Hertz Linear
-            f4_10 = Get value at time... 4 tenpercent Hertz Linear
-            f4_20 = Get value at time... 4 twentypercent Hertz Linear
-            f4_30 = Get value at time... 4 thirtypercent Hertz Linear
-            f4_40 = Get value at time... 4 fortypercent Hertz Linear
-            f4_50 = Get value at time... 4 fiftypercent Hertz Linear
-            f4_60 = Get value at time... 4 sixtypercent Hertz Linear
-            f4_70 = Get value at time... 4 seventypercent Hertz Linear
-            f4_80 = Get value at time... 4 eightypercent Hertz Linear
-            f4_90 = Get value at time... 4 ninetypercent Hertz Linear
-            f5_10 = Get value at time... 5 tenpercent Hertz Linear
-            f5_20 = Get value at time... 5 twentypercent Hertz Linear
-            f5_30 = Get value at time... 5 thirtypercent Hertz Linear
-            f5_40 = Get value at time... 5 fortypercent Hertz Linear
-            f5_50 = Get value at time... 5 fiftypercent Hertz Linear
-            f5_60 = Get value at time... 5 sixtypercent Hertz Linear
-            f5_70 = Get value at time... 5 seventypercent Hertz Linear
-            f5_80 = Get value at time... 5 eightypercent Hertz Linear
-            f5_90 = Get value at time... 5 ninetypercent Hertz Linear
-            f1_10$ = fixed$(f1_10, 4)
-            f1_20$ = fixed$(f1_20, 4)
-            f1_30$ = fixed$(f1_30, 4)
-            f1_40$ = fixed$(f1_40, 4)
-            f1_50$ = fixed$(f1_50, 4)
-            f1_60$ = fixed$(f1_60, 4)
-            f1_70$ = fixed$(f1_70, 4)
-            f1_80$ = fixed$(f1_80, 4)
-            f1_90$ = fixed$(f1_90, 4)
-            f2_10$ = fixed$(f2_10, 4)
-            f2_20$ = fixed$(f2_20, 4)
-            f2_30$ = fixed$(f2_30, 4)
-            f2_40$ = fixed$(f2_40, 4)
-            f2_50$ = fixed$(f2_50, 4)
-            f2_60$ = fixed$(f2_60, 4)
-            f2_70$ = fixed$(f2_70, 4)
-            f2_80$ = fixed$(f2_80, 4)
-            f2_90$ = fixed$(f2_90, 4)
-            f3_10$ = fixed$(f3_10, 4)
-            f3_20$ = fixed$(f3_20, 4)
-            f3_30$ = fixed$(f3_30, 4)
-            f3_40$ = fixed$(f3_40, 4)
-            f3_50$ = fixed$(f3_50, 4)
-            f3_60$ = fixed$(f3_60, 4)
-            f3_70$ = fixed$(f3_70, 4)
-            f3_80$ = fixed$(f3_80, 4)
-            f3_90$ = fixed$(f3_90, 4)
-            f4_10$ = fixed$(f4_10, 4)
-            f4_20$ = fixed$(f4_20, 4)
-            f4_30$ = fixed$(f4_30, 4)
-            f4_40$ = fixed$(f4_40, 4)
-            f4_50$ = fixed$(f4_50, 4)
-            f4_60$ = fixed$(f4_60, 4)
-            f4_70$ = fixed$(f4_70, 4)
-            f4_80$ = fixed$(f4_80, 4)
-            f4_90$ = fixed$(f4_90, 4)
-            f5_10$ = fixed$(f5_10, 4)
-            f5_20$ = fixed$(f5_20, 4)
-            f5_30$ = fixed$(f5_30, 4)
-            f5_40$ = fixed$(f5_40, 4)
-            f5_50$ = fixed$(f5_50, 4)
-            f5_60$ = fixed$(f5_60, 4)
-            f5_70$ = fixed$(f5_70, 4)
-            f5_80$ = fixed$(f5_80, 4)
-            f5_90$ = fixed$(f5_90, 4)
-            bandwidth1_10 = Get bandwidth at time... 1 tenpercent Hertz Linear
-            bandwidth1_20 = Get bandwidth at time... 1 twentypercent Hertz Linear
-            bandwidth1_30 = Get bandwidth at time... 1 thirtypercent Hertz Linear
-            bandwidth1_40 = Get bandwidth at time... 1 fortypercent Hertz Linear
-            bandwidth1_50 = Get bandwidth at time... 1 fiftypercent Hertz Linear
-            bandwidth1_60 = Get bandwidth at time... 1 sixtypercent Hertz Linear
-            bandwidth1_70 = Get bandwidth at time... 1 seventypercent Hertz Linear
-            bandwidth1_80 = Get bandwidth at time... 1 eightypercent Hertz Linear
-            bandwidth1_90 = Get bandwidth at time... 1 ninetypercent Hertz Linear
-            bandwidth2_10 = Get bandwidth at time... 2 tenpercent Hertz Linear
-            bandwidth2_20 = Get bandwidth at time... 2 twentypercent Hertz Linear
-            bandwidth2_30 = Get bandwidth at time... 2 thirtypercent Hertz Linear
-            bandwidth2_40 = Get bandwidth at time... 2 fortypercent Hertz Linear
-            bandwidth2_50 = Get bandwidth at time... 2 fiftypercent Hertz Linear
-            bandwidth2_60 = Get bandwidth at time... 2 sixtypercent Hertz Linear
-            bandwidth2_70 = Get bandwidth at time... 2 seventypercent Hertz Linear
-            bandwidth2_80 = Get bandwidth at time... 2 eightypercent Hertz Linear
-            bandwidth2_90 = Get bandwidth at time... 2 ninetypercent Hertz Linear
-            bandwidth3_10 = Get bandwidth at time... 3 tenpercent Hertz Linear
-            bandwidth3_20 = Get bandwidth at time... 3 twentypercent Hertz Linear
-            bandwidth3_30 = Get bandwidth at time... 3 thirtypercent Hertz Linear
-            bandwidth3_40 = Get bandwidth at time... 3 fortypercent Hertz Linear
-            bandwidth3_50 = Get bandwidth at time... 3 fiftypercent Hertz Linear
-            bandwidth3_60 = Get bandwidth at time... 3 sixtypercent Hertz Linear
-            bandwidth3_70 = Get bandwidth at time... 3 seventypercent Hertz Linear
-            bandwidth3_80 = Get bandwidth at time... 3 eightypercent Hertz Linear
-            bandwidth3_90 = Get bandwidth at time... 3 ninetypercent Hertz Linear
-            bandwidth4_10 = Get bandwidth at time... 4 tenpercent Hertz Linear
-            bandwidth4_20 = Get bandwidth at time... 4 twentypercent Hertz Linear
-            bandwidth4_30 = Get bandwidth at time... 4 thirtypercent Hertz Linear
-            bandwidth4_40 = Get bandwidth at time... 4 fortypercent Hertz Linear
-            bandwidth4_50 = Get bandwidth at time... 4 fiftypercent Hertz Linear
-            bandwidth4_60 = Get bandwidth at time... 4 sixtypercent Hertz Linear
-            bandwidth4_70 = Get bandwidth at time... 4 seventypercent Hertz Linear
-            bandwidth4_80 = Get bandwidth at time... 4 eightypercent Hertz Linear
-            bandwidth4_90 = Get bandwidth at time... 4 ninetypercent Hertz Linear
-            bandwidth5_10 = Get bandwidth at time... 5 tenpercent Hertz Linear
-            bandwidth5_20 = Get bandwidth at time... 5 twentypercent Hertz Linear
-            bandwidth5_30 = Get bandwidth at time... 5 thirtypercent Hertz Linear
-            bandwidth5_40 = Get bandwidth at time... 5 fortypercent Hertz Linear
-            bandwidth5_50 = Get bandwidth at time... 5 fiftypercent Hertz Linear
-            bandwidth5_60 = Get bandwidth at time... 5 sixtypercent Hertz Linear
-            bandwidth5_70 = Get bandwidth at time... 5 seventypercent Hertz Linear
-            bandwidth5_80 = Get bandwidth at time... 5 eightypercent Hertz Linear
-            bandwidth5_90 = Get bandwidth at time... 5 ninetypercent Hertz Linear
-            bandwidth1_10$ = fixed$(bandwidth1_10, 4)
-            bandwidth1_20$ = fixed$(bandwidth1_20, 4)
-            bandwidth1_30$ = fixed$(bandwidth1_30, 4)
-            bandwidth1_40$ = fixed$(bandwidth1_40, 4)
-            bandwidth1_50$ = fixed$(bandwidth1_50, 4)
-            bandwidth1_60$ = fixed$(bandwidth1_60, 4)
-            bandwidth1_70$ = fixed$(bandwidth1_70, 4)
-            bandwidth1_80$ = fixed$(bandwidth1_80, 4)
-            bandwidth1_90$ = fixed$(bandwidth1_90, 4)
-            bandwidth2_10$ = fixed$(bandwidth2_10, 4)
-            bandwidth2_20$ = fixed$(bandwidth2_20, 4)
-            bandwidth2_30$ = fixed$(bandwidth2_30, 4)
-            bandwidth2_40$ = fixed$(bandwidth2_40, 4)
-            bandwidth2_50$ = fixed$(bandwidth2_50, 4)
-            bandwidth2_60$ = fixed$(bandwidth2_60, 4)
-            bandwidth2_70$ = fixed$(bandwidth2_70, 4)
-            bandwidth2_80$ = fixed$(bandwidth2_80, 4)
-            bandwidth2_90$ = fixed$(bandwidth2_90, 4)
-            bandwidth3_10$ = fixed$(bandwidth3_10, 4)
-            bandwidth3_20$ = fixed$(bandwidth3_20, 4)
-            bandwidth3_30$ = fixed$(bandwidth3_30, 4)
-            bandwidth3_40$ = fixed$(bandwidth3_40, 4)
-            bandwidth3_50$ = fixed$(bandwidth3_50, 4)
-            bandwidth3_60$ = fixed$(bandwidth3_60, 4)
-            bandwidth3_70$ = fixed$(bandwidth3_70, 4)
-            bandwidth3_80$ = fixed$(bandwidth3_80, 4)
-            bandwidth3_90$ = fixed$(bandwidth3_90, 4)
-            bandwidth4_10$ = fixed$(bandwidth4_10, 4)
-            bandwidth4_20$ = fixed$(bandwidth4_20, 4)
-            bandwidth4_30$ = fixed$(bandwidth4_30, 4)
-            bandwidth4_40$ = fixed$(bandwidth4_40, 4)
-            bandwidth4_50$ = fixed$(bandwidth4_50, 4)
-            bandwidth4_60$ = fixed$(bandwidth4_60, 4)
-            bandwidth4_70$ = fixed$(bandwidth4_70, 4)
-            bandwidth4_80$ = fixed$(bandwidth4_80, 4)
-            bandwidth4_90$ = fixed$(bandwidth4_90, 4)
-            bandwidth5_10$ = fixed$(bandwidth5_10, 4)
-            bandwidth5_20$ = fixed$(bandwidth5_20, 4)
-            bandwidth5_30$ = fixed$(bandwidth5_30, 4)
-            bandwidth5_40$ = fixed$(bandwidth5_40, 4)
-            bandwidth5_50$ = fixed$(bandwidth5_50, 4)
-            bandwidth5_60$ = fixed$(bandwidth5_60, 4)
-            bandwidth5_70$ = fixed$(bandwidth5_70, 4)
-            bandwidth5_80$ = fixed$(bandwidth5_80, 4)
-            bandwidth5_90$ = fixed$(bandwidth5_90, 4)
-            f1_slope_20 = ((f1_30 - f1_10) / (thirtypercent - tenpercent))
-            f1_slope_30 = ((f1_40 - f1_20) / (fortypercent - twentypercent))
-            f1_slope_40 = ((f1_50 - f1_30) / (fiftypercent - thirtypercent))
-            f1_slope_50 = ((f1_60 - f1_40) / (sixtypercent - fortypercent))
-            f1_slope_60 = ((f1_70 - f1_50) / (seventypercent - fiftypercent))
-            f1_slope_70 = ((f1_80 - f1_60) / (eightypercent - sixtypercent))
-            f1_slope_80 = ((f1_90 - f1_70) / (ninetypercent - seventypercent))
-            f2_slope_20 = ((f2_30 - f2_10) / (thirtypercent - tenpercent))
-            f2_slope_30 = ((f2_40 - f2_20) / (fortypercent - twentypercent))
-            f2_slope_40 = ((f2_50 - f2_30) / (fiftypercent - thirtypercent))
-            f2_slope_50 = ((f2_60 - f2_40) / (sixtypercent - fortypercent))
-            f2_slope_60 = ((f2_70 - f2_50) / (seventypercent - fiftypercent))
-            f2_slope_70 = ((f2_80 - f2_60) / (eightypercent - sixtypercent))
-            f2_slope_80 = ((f2_90 - f2_70) / (ninetypercent - seventypercent))
-            f3_slope_20 = ((f3_30 - f3_10) / (thirtypercent - tenpercent))
-            f3_slope_30 = ((f3_40 - f3_20) / (fortypercent - twentypercent))
-            f3_slope_40 = ((f3_50 - f3_30) / (fiftypercent - thirtypercent))
-            f3_slope_50 = ((f3_60 - f3_40) / (sixtypercent - fortypercent))
-            f3_slope_60 = ((f3_70 - f3_50) / (seventypercent - fiftypercent))
-            f3_slope_70 = ((f3_80 - f3_60) / (eightypercent - sixtypercent))
-            f3_slope_80 = ((f3_90 - f3_70) / (ninetypercent - seventypercent))
-            f4_slope_20 = ((f4_30 - f4_10) / (thirtypercent - tenpercent))
-            f4_slope_30 = ((f4_40 - f4_20) / (fortypercent - twentypercent))
-            f4_slope_40 = ((f4_50 - f4_30) / (fiftypercent - thirtypercent))
-            f4_slope_50 = ((f4_60 - f4_40) / (sixtypercent - fortypercent))
-            f4_slope_60 = ((f4_70 - f4_50) / (seventypercent - fiftypercent))
-            f4_slope_70 = ((f4_80 - f4_60) / (eightypercent - sixtypercent))
-            f4_slope_80 = ((f4_90 - f4_70) / (ninetypercent - seventypercent))
-            f5_slope_20 = ((f5_30 - f5_10) / (thirtypercent - tenpercent))
-            f5_slope_30 = ((f5_40 - f5_20) / (fortypercent - twentypercent))
-            f5_slope_40 = ((f5_50 - f5_30) / (fiftypercent - thirtypercent))
-            f5_slope_50 = ((f5_60 - f5_40) / (sixtypercent - fortypercent))
-            f5_slope_60 = ((f5_70 - f5_50) / (seventypercent - fiftypercent))
-            f5_slope_70 = ((f5_80 - f5_60) / (eightypercent - sixtypercent))
-            f5_slope_80 = ((f5_90 - f5_70) / (ninetypercent - seventypercent))
-            f1_slope_20$ = fixed$(f1_slope_20, 4)
-            f1_slope_30$ = fixed$(f1_slope_30, 4)
-            f1_slope_40$ = fixed$(f1_slope_40, 4)
-            f1_slope_50$ = fixed$(f1_slope_50, 4)
-            f1_slope_60$ = fixed$(f1_slope_60, 4)
-            f1_slope_70$ = fixed$(f1_slope_70, 4)
-            f1_slope_80$ = fixed$(f1_slope_80, 4)
-            f2_slope_20$ = fixed$(f2_slope_20, 4)
-            f2_slope_30$ = fixed$(f2_slope_30, 4)
-            f2_slope_40$ = fixed$(f2_slope_40, 4)
-            f2_slope_50$ = fixed$(f2_slope_50, 4)
-            f2_slope_60$ = fixed$(f2_slope_60, 4)
-            f2_slope_70$ = fixed$(f2_slope_70, 4)
-            f2_slope_80$ = fixed$(f2_slope_80, 4)
-            f3_slope_20$ = fixed$(f3_slope_20, 4)
-            f3_slope_30$ = fixed$(f3_slope_30, 4)
-            f3_slope_40$ = fixed$(f3_slope_40, 4)
-            f3_slope_50$ = fixed$(f3_slope_50, 4)
-            f3_slope_60$ = fixed$(f3_slope_60, 4)
-            f3_slope_70$ = fixed$(f3_slope_70, 4)
-            f3_slope_80$ = fixed$(f3_slope_80, 4)
-            f4_slope_20$ = fixed$(f4_slope_20, 4)
-            f4_slope_30$ = fixed$(f4_slope_30, 4)
-            f4_slope_40$ = fixed$(f4_slope_40, 4)
-            f4_slope_50$ = fixed$(f4_slope_50, 4)
-            f4_slope_60$ = fixed$(f4_slope_60, 4)
-            f4_slope_70$ = fixed$(f4_slope_70, 4)
-            f4_slope_80$ = fixed$(f4_slope_80, 4)
-            f5_slope_20$ = fixed$(f5_slope_20, 4)
-            f5_slope_30$ = fixed$(f5_slope_30, 4)
-            f5_slope_40$ = fixed$(f5_slope_40, 4)
-            f5_slope_50$ = fixed$(f5_slope_50, 4)
-            f5_slope_60$ = fixed$(f5_slope_60, 4)
-            f5_slope_70$ = fixed$(f5_slope_70, 4)
-            f5_slope_80$ = fixed$(f5_slope_80, 4)
-
-            #Gather harmonicity.
-            selectObject: currentHarmonicity
-            harmonicity_10 = Get value at time... tenpercent cubic
-            harmonicity_20 = Get value at time... twentypercent cubic
-            harmonicity_30 = Get value at time... thirtypercent cubic
-            harmonicity_40 = Get value at time... fortypercent cubic
-            harmonicity_50 = Get value at time... fiftypercent cubic
-            harmonicity_60 = Get value at time... sixtypercent cubic
-            harmonicity_70 = Get value at time... seventypercent cubic
-            harmonicity_80 = Get value at time... eightypercent cubic
-            harmonicity_90 = Get value at time... ninetypercent cubic
-            harmonicity_10$ = fixed$(harmonicity_10, 4)
-            harmonicity_20$ = fixed$(harmonicity_20, 4)
-            harmonicity_30$ = fixed$(harmonicity_30, 4)
-            harmonicity_40$ = fixed$(harmonicity_40, 4)
-            harmonicity_50$ = fixed$(harmonicity_50, 4)
-            harmonicity_60$ = fixed$(harmonicity_60, 4)
-            harmonicity_70$ = fixed$(harmonicity_70, 4)
-            harmonicity_80$ = fixed$(harmonicity_80, 4)
-            harmonicity_90$ = fixed$(harmonicity_90, 4)
-
-            #This is the intensity section. We're going to gather mean intensities throughout the sound.
-            #We're also going to gather min, and max intensity.
-            #Lastly, we're going to include an intensity difference measure, which comes from Bongiovanni 2015.
-            selectObject: currentIntensity
-            intensity_10 = Get mean... thisPhonemeStartTime tenpercent dB
-            intensity_20 = Get mean... tenpercent twentypercent dB
-            intensity_30 = Get mean... twentypercent thirtypercent dB
-            intensity_40 = Get mean... thirtypercent fortypercent dB
-            intensity_50 = Get mean... fortypercent fiftypercent dB
-            intensity_60 = Get mean... fiftypercent sixtypercent dB
-            intensity_70 = Get mean... sixtypercent seventypercent dB
-            intensity_80 = Get mean... seventypercent eightypercent dB
-            intensity_90 = Get mean... eightypercent ninetypercent dB
-            intensity_100 = Get mean... ninetypercent thisPhonemeEndTime dB
-            intensity_10$ = fixed$(intensity_10, 4)
-            intensity_20$ = fixed$(intensity_20, 4)
-            intensity_30$ = fixed$(intensity_30, 4)
-            intensity_40$ = fixed$(intensity_40, 4)
-            intensity_50$ = fixed$(intensity_50, 4)
-            intensity_60$ = fixed$(intensity_60, 4)
-            intensity_70$ = fixed$(intensity_70, 4)
-            intensity_80$ = fixed$(intensity_80, 4)
-            intensity_90$ = fixed$(intensity_90, 4)
-            intensity_100$ = fixed$(intensity_100, 4)
-            intensity_max = Get maximum... thisPhonemeStartTime thisPhonemeEndTime Parabolic
-            intensity_min = Get minimum... thisPhonemeStartTime thisPhonemeEndTime Parabolic
-            intensity_max$ = fixed$(intensity_max, 4)
-            intensity_min$ = fixed$(intensity_min, 4)
-            
-            intensity_difference$ = "--undefined--"
-            if currentInterval > 1
-                selectObject: currentTextGrid
-                previous_initial_time = Get start point: phoneTierNumber, precederNumber
-                selectObject: currentIntensity
-                previous_intensity_minimum = Get minimum... previous_initial_time thisPhonemeStartTime Parabolic
-                intensity_difference = intensity_max - previous_intensity_minimum
-                intensity_difference$ = fixed$(intensity_difference, 4)
-            endif
-
-            #Now we select the Point Process object to collect Jitter and Shimmer data.
-            selectObject: currentPointProcess
-            jitter = Get jitter (local, absolute)... thisPhonemeStartTime thisPhonemeEndTime 0.0001 0.02 1.3
-            jitter$ = fixed$(jitter, 4)
-
-            selectObject: currentSound, currentPointProcess
-            shimmer = Get shimmer (local): thisPhonemeStartTime, thisPhonemeEndTime, 0.0001, 0.02, 1.3, 1.6
-            shimmer$ = fixed$(shimmer, 4)
-            
-            #This is the final acoustical extraction, which creates a bunch of spectrum objects.
-            selectObject: currentSound
-            currentSoundChunk = Extract part... thisPhonemeStartTime thisPhonemeEndTime rectangular 1 on
-            currentSpectrum = To Spectrum... yes
-            selectObject: currentSpectrum
-            cog = Get centre of gravity... 2
-            cogSD = Get standard deviation... 2
-            skewness = Get skewness... 2
-            kurtosis = Get kurtosis... 2
-            removeObject: currentSpectrum
-            removeObject: currentSoundChunk
-            cog$ = fixed$(cog, 4)
-            cogSD$ = fixed$(cogSD, 4)
-            skewness$ = fixed$(skewness, 4)
-            kurtosis$ = fixed$(kurtosis, 4)
-
-            endOfForm$ = "end_of_form"
-            appendFileLine: csvName$, currentFile$,",",thisPhonemeStartTime,",",thisPhonemeEndTime,",",thisPhoneme$,",",currentWord$,",",currentTask$,",",duration$,",",precedingPhoneme$,",",followingPhoneme$,",",f0_10$,",",f0_20$,",",f0_30$,",",f0_40$,",",f0_50$,",",f0_60$,",",f0_70$,",",f0_80$,",",f0_90$,",",f1_10$,",",f1_20$,",",f1_30$,",",f1_40$,",",f1_50$,",",f1_60$,",",f1_70$,",",f1_80$,",",f1_90$,",",f2_10$,",",f2_20$,",",f2_30$,",",f2_40$,",",f2_50$,",",f2_60$,",",f2_70$,",",f2_80$,",",f2_90$,",",f3_10$,",",f3_20$,",",f3_30$,",",f3_40$,",",f3_50$,",",f3_60$,",",f3_70$,",",f3_80$,",",f3_90$,",",f4_10$,",",f4_20$,",",f4_30$,",",f4_40$,",",f4_50$,",",f4_60$,",",f4_70$,",",f4_80$,",",f4_90$,",",f5_10$,",",f5_20$,",",f5_30$,",",f5_40$,",",f5_50$,",",f5_60$,",",f5_70$,",",f5_80$,",",f5_90$,",",bandwidth1_10$,",",bandwidth1_20$,",",bandwidth1_30$,",",bandwidth1_40$,",",bandwidth1_50$,",",bandwidth1_60$,",",bandwidth1_70$,",",bandwidth1_80$,",",bandwidth1_90$,",",bandwidth2_10$,",",bandwidth2_20$,",",bandwidth2_30$,",",bandwidth2_40$,",",bandwidth2_50$,",",bandwidth2_60$,",",bandwidth2_70$,",",bandwidth2_80$,",",bandwidth2_90$,",",bandwidth3_10$,",",bandwidth3_20$,",",bandwidth3_30$,",",bandwidth3_40$,",",bandwidth3_50$,",",bandwidth3_60$,",",bandwidth3_70$,",",bandwidth3_80$,",",bandwidth3_90$,",",bandwidth4_10$,",",bandwidth4_20$,",",bandwidth4_30$,",",bandwidth4_40$,",",bandwidth4_50$,",",bandwidth4_60$,",",bandwidth4_70$,",",bandwidth4_80$,",",bandwidth4_90$,",",bandwidth5_10$,",",bandwidth5_20$,",",bandwidth5_30$,",",bandwidth5_40$,",",bandwidth5_50$,",",bandwidth5_60$,",",bandwidth5_70$,",",bandwidth5_80$,",",bandwidth5_90$,",",f1_slope_20$,",",f1_slope_30$,",",f1_slope_40$,",",f1_slope_50$,",",f1_slope_60$,",",f1_slope_70$,",",f1_slope_80$,",",f2_slope_20$,",",f2_slope_30$,",",f2_slope_40$,",",f2_slope_50$,",",f2_slope_60$,",",f2_slope_70$,",",f2_slope_80$,",",f3_slope_20$,",",f3_slope_30$,",",f3_slope_40$,",",f3_slope_50$,",",f3_slope_60$,",",f3_slope_70$,",",f3_slope_80$,",",f4_slope_20$,",",f4_slope_30$,",",f4_slope_40$,",",f4_slope_50$,",",f4_slope_60$,",",f4_slope_70$,",",f4_slope_80$,",",f5_slope_20$,",",f5_slope_30$,",",f5_slope_40$,",",f5_slope_50$,",",f5_slope_60$,",",f5_slope_70$,",",f5_slope_80$,",",harmonicity_10$,",",harmonicity_20$,",",harmonicity_30$,",",harmonicity_40$,",",harmonicity_50$,",",harmonicity_60$,",",harmonicity_70$,",",harmonicity_80$,",",harmonicity_90$,",",intensity_10$,",",intensity_20$,",",intensity_30$,",",intensity_40$,",",intensity_50$,",",intensity_60$,",",intensity_70$,",",intensity_80$,",",intensity_90$,",",intensity_100$,",",intensity_max$,",",intensity_min$,",",intensity_difference$,",",jitter$,",",shimmer$,",",cog$,",",cogSD$,",",skewness$,",",kurtosis$,",",endOfForm$,tab$
         endif
     endfor
+    selectObject: table
+    Save as comma-separated file: csv_file_path$
     removeObject: currentPitch
     removeObject: currentHarmonicity
     removeObject: currentIntensity
     removeObject: currentPointProcess
     removeObject: currentSound
-    removeObject: currentFormant
+    if i_want_LSRL_formant_optimization = 0
+        removeObject: currentFormant
+    endif
     removeObject: currentTextGrid
 endfor
+removeObject: table
 removeObject: fileList
 appendInfoLine: newline$, "SCRIPT COMPLETED SUCCESSFULLY! WOOHOO!"
+for i from 1 to 3
+freq = 2*(i*200)
+Create Sound as pure tone: "sine",1, 0, 0.05, 44100, freq, 1, 0.01, 0.01
+Play
+Remove
+endfor
