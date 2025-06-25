@@ -1,6 +1,6 @@
 # Praat Mass Analyzer
 
-**Praat Mass Analyzer** is a Praat script that automates the extraction of several acoustic measurements. This tool is designed for researchers and linguists who need to process large amounts of audio data efficiently. This Praat script is file batchable and operable on Windows, Mac, or any other operating system capable of running Praat.
+**Praat Mass Analyzer** is a single, easy-to-use Praat script that automates the extraction of several acoustic measurements. This tool is designed for researchers and linguists who need to process large amounts of audio data efficiently. This Praat script is file batchable and operable on Windows, Mac, or any other operating system capable of running Praat.
 
 ## How to cite
 
