@@ -21,7 +21,7 @@ By default, each measurement is gathered at 10% intervals throughout each phone:
 - Intensity
 - Intensity Max (One measurement)
 - Intensity Min (One measurement)
-- Max intensity of the current phone minus the minimum intensity of the previous phone (header name is intensity_difference)
+- Max intensity of the current phone minus the minimum intensity of the previous phone (header name is intensity_difference). This variable is based on Bongiovanni (2015).
 - Preceding Phoneme
 - Following Phoneme
 - Phone Duration
