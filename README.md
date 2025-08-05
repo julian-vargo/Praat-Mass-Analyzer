@@ -13,7 +13,8 @@ The script automatically collects the following parameters for each phone segmen
 By default, each measurement is gathered at 10% intervals throughout each phone:
 - Formants (F1-F5)
     - You can optionally gather formants using a Least Squares Linear Regression-based algorithm of the first three formants to optimize the smoothness of the LPC formant tracking.
-    - This idea was based on Santiago Barreda's very elaborate FastTrack plugin for Praat, but I wanted to integrate a regression that could work within a single Praat script that also extracted non-formant measurements.  
+    - This idea was based on Santiago Barreda's very elaborate FastTrack plugin for Praat, but I wanted to integrate a regression that could work within a single Praat script that also extracted non-formant measurements.
+    - LSRL optimization is currently in beta and doesn't show up in the UI. Email me if you'd like help setting this up!
 - Pitch (F0)
 - Formant Bandwidths (F1-F5)
 - Formant Slope
