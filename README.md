@@ -6,6 +6,8 @@
 
 Place your TextGrid and wav files into a single folder containing no other files. Make sure that your wav and TextGrid files have the same exact basename (eg., sound1.wav & sound1.TextGrid will be paired up together). Once you're ready, run the script in Praat and follow the pop-up menus for further instructions. For large file batches, the script can take a while, but it will play a ringtone when complete. Additionally, the Praat info menu will inform you when the script is complete running.
 
+A CSV file, separated by regular commas "," will be generated as a single output file to the file-path of your choosing.
+
 Please supply *full file paths* for all of your inputs. Happy Praating!
 
 ## How to cite
