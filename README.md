@@ -2,6 +2,12 @@
 
 **Praat Mass Analyzer** is a single, easy-to-use Praat script that automates the extraction of several acoustic measurements. This tool is designed for researchers and linguists who need to process large amounts of audio data efficiently. This Praat script is file batchable and operable on Windows, Mac, or any other operating system capable of running Praat.
 
+## Instructions
+
+Place your TextGrid and wav files into a single folder containing no other files. Make sure that your wav and TextGrid files have the same exact basename (eg., sound1.wav & sound1.TextGrid will be paired up together). Once you're ready, run the script in Praat and follow the pop-up menus for further instructions. For large file batches, the script can take a while, but it will play a ringtone when complete. Additionally, the Praat info menu will inform you when the script is complete running.
+
+Please supply *full file paths* for all of your inputs. Happy Praating!
+
 ## How to cite
 
 Vargo, Julian (2025). Praat Mass Analyzer. [https://github.com/julian-vargo/Praat-Mass-Analyzer/]
@@ -47,3 +53,5 @@ Julian Vargo | Department of Spanish & Portuguese | University of California, Be
 
 *Written on Praat version 6.4.25 (Boersma & Weenink 2024)*
 *If you are having trouble getting this Praat script to work, please email me and I can arrange a time to assist you*
+
+If you'd like to request a new feature for this Praat script, please let me know! Feedback is always appreciated.
