@@ -12,7 +12,9 @@ warning: If you have wav files without TextGrids or vice-versa, the script may m
 A CSV file, separated by regular commas "," will be generated as a single output file to the file-path of your choosing. The CSV generation will overwrite any previously existing files of the same name.
 
 Please supply *full file paths* for all of your inputs.
+
 Windows example: C:\Users\julian\Downloads\audio_and_textgrid_input_folder
+
 Mac example: /Users/julian/Desktop/audio_and_textgrid_input_folder
 
 ## How to cite
