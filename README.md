@@ -26,41 +26,41 @@ Department of Spanish & Portuguese. University of California, Berkeley.
 
 The script automatically collects the following parameters for each phone segment in a sound file.
 By default, each measurement is gathered at 10% intervals throughout each phone:
-- Formants (F1-F5)
-    - *In beta, not found on the current user interface*: You can optionally gather formants using a Least Squares Linear Regression-based algorithm of the first three formants to optimize the smoothness of the LPC formant tracking.
-    - This idea was based on Santiago Barreda's very elaborate FastTrack plugin for Praat, but I wanted to integrate a regression that could work within a single Praat script that also extracted non-formant measurements.
-    - LSRL optimization is currently in beta and doesn't show up in the UI. Email me if you'd like help setting this up!
-- Pitch (F0)
+- Formants (F1-F5), both lpc (standard) and ltas versions
+- Pitch (F0), lpc and ltas
 - Formant Bandwidths (F1-F5)
-- Formant Slope
 - Harmonicity
 - Intensity
 - Intensity Max (One measurement)
 - Intensity Min (One measurement)
-- Max intensity of the current phone minus the minimum intensity of the previous phone (header name is intensity_difference). This variable is based on Bongiovanni (2015).
+- Max intensity of the current phone minus the minimum intensity of the previous phone (header name is intensity_difference) Bongiovanni (2015).
 - Preceding Phoneme
 - Following Phoneme
 - Phone Duration
 - Jitter
 - Shimmer
-- Center of Gravity (one measurement taken for the entire phoneme)
-- Center of Gravity Standard Deviation (one measurement taken for the entire phoneme)
-- Skewness (one measurement taken for the entire phoneme)
-- Kurtosis (one measurement taken for the entire phoneme)
-- A1P0 (Difference of Amplitude of first formant minus the amplitude of the harmonic under the first formant)
-  
+- Center of Gravity
+- Center of Gravity Standard Deviation
+- Skewness
+- Kurtosis
+- Several P0 and P1 nasal amplitude and nasal frequency measurements from various papers by Styler (2017), Chen (1997), Pruthi & Espy-Wilson(2004 & 2007)
+- H1-through-H5 frequency & amplitude
+- Amplitudes from 1k-through-5k
+- RMS Energy
+ 
 ## Notes and additional features
 - *All point measurements are taken at the 10%, 20%, 30%... 90% portions of the phone, unless otherwise specified*
 - *All interval measurements are taken at the 0%->10%, 10%->20%, ... , 90%->100% portions of the phone*
 - *The script supports exporting information for between 1 and 3 textgrid tiers (obligatorily phone, optionally word, and optionally notes/task-type/speaker)*
-- *Removed from user-interface*: The optional LSRL formant tracking algorithm uses three formant-ceiling sweeps to narrow down on the perfect formant ceiling for a given sound. The formant tracking is pretty good, but it is at the expense of speed. I don't recommend using this algorithm for more than an hour of data at a time. Additionally, there are some issues with formant tracking at the 10% and 90% phoneme edges when using the regression optimization.
-- Depending on your operating system, the script has some built-in logic handling for your file paths and automatically handles quotes in your paths, so you don't need to edit your file path quotes or slashes at all.
-- *Designed on Praat version 6.4.25*
+- Built-in Mac/Windows/Linux support
 
 ## Contact
 Julian Vargo | Department of Spanish & Portuguese | University of California, Berkeley | julianvargo@berkeley.edu
 
-*Written on Praat version 6.4.25 (Boersma & Weenink 2024)*
+*Written on Praat version 6.4.48, released 9 December 2025 on ARM64 Windows (Boersma & Weenink 2025)*
+
+*Script last updated 20 December 2025*
+
 *If you are having trouble getting this Praat script to work, please email me and I can arrange a time to assist you*
 
 If you'd like to request a new feature for this Praat script, please let me know! Feedback is always appreciated.
