@@ -8,29 +8,17 @@
 - Run the batch file
 
 ## Corpus structure
-./
 
 ├── windows_threading.bat
-
 └── test_dataset/
-
     ├── output.csv
-
     └── input_folder/
-
         ├── audio1.TextGrid
-    
         ├── audio1.wav
-        
         ├── audio2.TextGrid
-        
         ├── audio2.wav
-        
         ├── caught.TextGrid
-        
         ├── caught.wav
-        
         ├── caught2.TextGrid
-        
         └── caught2.wav
 
