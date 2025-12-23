@@ -43,6 +43,7 @@ By default, each measurement is gathered at 10% intervals throughout each phone:
 - Center of Gravity Standard Deviation
 - Skewness
 - Kurtosis
+### Voice features (beta)
 - Several P0 and P1 nasal amplitude and nasal frequency measurements from various papers by Styler (2017), Chen (1997), Pruthi & Espy-Wilson(2004 & 2007)
 - H1-through-H5 frequency & amplitude
 - Amplitudes from 1k-through-5k
