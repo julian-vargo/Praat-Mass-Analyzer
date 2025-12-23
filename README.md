@@ -1,6 +1,6 @@
 # Praat Mass Analyzer
 
-**Praat Mass Analyzer** is a single, easy-to-use Praat script that automates the extraction of several acoustic measurements. This tool is designed for researchers and linguists who need to process large amounts of audio data efficiently. This Praat script is file batchable and operable on Windows, Mac, or any other operating system capable of running Praat.
+**Praat Mass Analyzer** is a single, easy-to-use Praat script that automates the extraction of several acoustic measurements. This tool is designed for researchers and linguists who need to process large amounts of audio data efficiently. This Praat script is file batchable and operable on Windows, Mac, or any other operating system capable of running Praat. This script supports the use of multiple CPU cores.
 
 ## Instructions
 
@@ -53,13 +53,14 @@ By default, each measurement is gathered at 10% intervals throughout each phone:
 - *All interval measurements are taken at the 0%->10%, 10%->20%, ... , 90%->100% portions of the phone*
 - *The script supports exporting information for between 1 and 3 textgrid tiers (obligatorily phone, optionally word, and optionally notes/task-type/speaker)*
 - Built-in Mac/Windows/Linux support
+- Multiple CPU cores at once, see developer_tools/README.md
 
 ## Contact
 Julian Vargo | Department of Spanish & Portuguese | University of California, Berkeley | julianvargo@berkeley.edu
 
 *Written on Praat version 6.4.48, released 9 December 2025 on ARM64 Windows (Boersma & Weenink 2025)*
 
-*Script last updated 20 December 2025*
+*Script last updated 22 December 2025*
 
 *If you are having trouble getting this Praat script to work, please email me and I can arrange a time to assist you*
 
