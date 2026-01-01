@@ -553,6 +553,7 @@ endfor
 nocheck removeObject: fileList
 
 # Calculate the runtime
+timeElapsed = 0
 nocheck timeElapsed = clock() - runtimer
 nocheck timerMessage$ = newline$ + "Process " + string$(process_index) + " of " + string$(number_of_cpu_cores) + " completed in "
 if timeElapsed < 10
