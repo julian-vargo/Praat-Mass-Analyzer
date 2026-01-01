@@ -1,8 +1,8 @@
 # COMMAND LINE USERS: CONFIGURE YOUR VARIABLES HERE
 
     # Main arguments, use forward slashes for Mac or Unix systems
-    input_folder$ = "C:\Users\...\subfolder\input_folder"
-    csv_file_path$ = "C:\Users\...\spreadsheets\output.csv"
+    input_folder$ = "C:\Users\julia\Downloads\Praat-Mass-Analyzer\developer_tools\test_dataset\input_folder"
+    csv_file_path$ = "C:\Users\julia\Downloads\Praat-Mass-Analyzer\developer_tools\test_dataset\output.csv"
 
     # Tiers: phone is mandatory. Use 0 to ignore for other tiers such as word, speaker, notes, task_type
     phone_tier_number = 2
@@ -86,7 +86,7 @@ if developer_mode = 0
 endif
 
 # Initialize a clock for identifying bottlenecks
-runtimer = clock()
+nocheck runtimer = clock()
 
 if process_index = 1
     writeInfoLine: "Initializing Praat Mass Analyzer"
@@ -119,11 +119,7 @@ else
 endif
 
 # Construct headers for csv
-header$ = ""
-if numberOfFiles > 1
-    header$ = "file_name,"
-endif
-header$ = header$ + "start_time,end_time,phoneme"
+header$ = "file_name,start_time,end_time,phoneme"
 
 if word_tier_number <> 0
     header$ = header$ + ",word"
@@ -280,10 +276,7 @@ for file to numberOfFiles
                         thisPhonemeEndTime$ = fixed$(round(thisPhonemeEndTime * 10000)/10000, 10)
                         duration$ = fixed$(round(duration * 10000)/10000, 10)
                         
-                        if numberOfFiles > 1
-                            results$ = results$ + currentFile$ + ","
-                        endif
-                        results$ = results$ + thisPhonemeStartTime$ + "," + thisPhonemeEndTime$ + "," + thisPhoneme$
+                        results$ = results$ + currentFile$ + "," + thisPhonemeStartTime$ + "," + thisPhonemeEndTime$ + "," + thisPhoneme$
 
                         if word_tier_number <> 0
                             results$ = results$ + "," + currentWord$
@@ -560,14 +553,14 @@ endfor
 nocheck removeObject: fileList
 
 # Calculate the runtime
-timeElapsed = clock() - runtimer
-timerMessage$ = newline$ + "Process " + string$(process_index) + " of " + string$(number_of_cpu_cores) + " completed in "
+nocheck timeElapsed = clock() - runtimer
+nocheck timerMessage$ = newline$ + "Process " + string$(process_index) + " of " + string$(number_of_cpu_cores) + " completed in "
 if timeElapsed < 10
-    appendInfoLine: timerMessage$, fixed$ (1000 * timeElapsed, 3), " milliseconds"
+    nocheck appendInfoLine: timerMessage$, fixed$ (1000 * timeElapsed, 3), " milliseconds"
 elsif timeElapsed < 60
-    appendInfoLine: timerMessage$, fixed$ (timeElapsed, 3), " seconds"
+    nocheck appendInfoLine: timerMessage$, fixed$ (timeElapsed, 3), " seconds"
 elsif timeElapsed < 3600
-    appendInfoLine: timerMessage$, fixed$ (timeElapsed / 60, 3), " minutes"
+    nocheck appendInfoLine: timerMessage$, fixed$ (timeElapsed / 60, 3), " minutes"
 else
-    appendInfoLine: timerMessage$, fixed$ (timeElapsed / 3600, 3), " hours"
+    nocheck appendInfoLine: timerMessage$, fixed$ (timeElapsed / 3600, 3), " hours"
 endif
