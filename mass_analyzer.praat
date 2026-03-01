@@ -255,20 +255,20 @@ for file to numberOfFiles
 
                         if word_tier_number <> 0
                             currentWord$ = "--undefined--"
-                            nocheck currentWordInterval = Get interval at time: word_tier_number, timePercentile[5]
-                            nocheck currentWord$ = Get label of interval: word_tier_number, currentWordInterval
+                            currentWordInterval = Get interval at time: word_tier_number, timePercentile[5]
+                            currentWord$ = Get label of interval: word_tier_number, currentWordInterval
                         endif
 
                         if miscellaneous_tier_number <> 0
                             currentMisc$ = "--undefined--"
-                            nocheck currentMiscInterval = Get interval at time: miscellaneous_tier_number, timePercentile[5]
-                            nocheck currentMisc$ = Get label of interval: miscellaneous_tier_number, currentMiscInterval
+                            currentMiscInterval = Get interval at time: miscellaneous_tier_number, timePercentile[5]
+                            currentMisc$ = Get label of interval: miscellaneous_tier_number, currentMiscInterval
                         endif
 
                         if miscellaneous_second_tier_number <> 0
                             currentMisc_b$ = "--undefined--"
-                            nocheck currentMiscInterval = Get interval at time: miscellaneous_second_tier_number, timePercentile[5]
-                            nocheck currentMisc_b$ = Get label of interval: miscellaneous_second_tier_number, currentMiscInterval
+                            currentMiscInterval = Get interval at time: miscellaneous_second_tier_number, timePercentile[5]
+                            currentMisc_b$ = Get label of interval: miscellaneous_second_tier_number, currentMiscInterval
                         endif
 
                         # Convert our starting variables into strings, which can come in handy (but is not strictly necessary) when appending files
@@ -564,4 +564,5 @@ elsif timeElapsed < 3600
     nocheck appendInfoLine: timerMessage$, fixed$ (timeElapsed / 60, 3), " minutes"
 else
     nocheck appendInfoLine: timerMessage$, fixed$ (timeElapsed / 3600, 3), " hours"
+
 endif
