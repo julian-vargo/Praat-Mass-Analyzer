@@ -7,7 +7,7 @@ cd /d "%SCRIPT_DIR%\.."
 set "PRAAT_EXE=C:\Users\julia\Desktop\Praat.exe"
 
 REM number of logical processors
-set "NUM_CORES=10"
+set "NUM_CORES=6"
 
 REM Set priority and reduce crashes
 set "PRIORITY=/NORMAL"

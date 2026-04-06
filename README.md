@@ -23,38 +23,34 @@ Vargo, Julian (2025). Praat Mass Analyzer. [https://github.com/julian-vargo/Praa
 Department of Spanish & Portuguese. University of California, Berkeley.
 
 ## Features
-
 The script automatically collects the following parameters for each phone segment in a sound file.
 By default, each measurement is gathered at 10% intervals throughout each phone:
 - Formants (F1-F5), both lpc (standard) and ltas versions
-- Pitch (F0), lpc and ltas
+- Pitch (F0)
 - Formant Bandwidths (F1-F5)
 - Harmonicity
 - Intensity
-- Intensity Max (One measurement)
-- Intensity Min (One measurement)
+- Intensity Min and Max (One measurement)
 - Max intensity of the current phone minus the minimum intensity of the previous phone (header name is intensity_difference) Bongiovanni (2015).
-- Preceding Phoneme
-- Following Phoneme
-- Phone Duration
-- Jitter
-- Shimmer
-- Center of Gravity
-- Center of Gravity Standard Deviation
-- Skewness
-- Kurtosis
-### Voice features (beta)
+- Preceding Phoneme and Following Phoneme
+- Jitter and Shimmer
+- Center of Gravity, CoG Standard Deviation, Skewness, and Kurtosis
+- Voice analysis (percentage of voiceless intervals in a phone, Voice report pulse, pitch, period, jitter, and shimmer summaries)
+
+### Advanced features (beta)
 - Several P0 and P1 nasal amplitude and nasal frequency measurements from various papers by Styler (2017), Chen (1997), Pruthi & Espy-Wilson(2004 & 2007)
 - H1-through-H5 frequency & amplitude
+- LTAS Pitch and Formant analysis
 - Amplitudes from 1k-through-5k
 - RMS Energy
  
 ## Notes and additional features
-- *All point measurements are taken at the 10%, 20%, 30%... 90% portions of the phone, unless otherwise specified*
-- *All interval measurements are taken at the 0%->10%, 10%->20%, ... , 90%->100% portions of the phone*
-- *The script supports exporting information for between 1 and 4 textgrid tiers (obligatorily phone, optionally word, and optionally notes/task-type/speaker)*
+- All point measurements are taken at the 10%, 20%, 30%... 90% portions of the phone, unless otherwise specified*
+- All interval measurements are taken at the 0%->10%, 10%->20%, ... , 90%->100% portions of the phone*
+- The script supports exporting information for between 1 and 4 textgrid tiers (obligatorily phone, optionally word, and optionally notes/task-type/speaker)*
 - Built-in Mac/Windows/Linux support
-- Multiple CPU cores at once, see developer_tools/README.md
+- Multiple CPU cores at once (Windows), see developer_tools/README.md
+- Guide on column name outputs, see column_guide.md
 
 ## Contact
 Julian Vargo | Department of Spanish & Portuguese | University of California, Berkeley | julianvargo@berkeley.edu
