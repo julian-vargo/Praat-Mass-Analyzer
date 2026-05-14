@@ -4,6 +4,8 @@
 
 ## Instructions
 
+Download mass_analyzer.praat if you want to use the regular program with a clickable interface.
+
 Place your TextGrid and wav files into a single folder containing no other files. Make sure that your wav and TextGrid files have the same exact basename (eg., sound1.wav & sound1.TextGrid will be paired up together). Once you're ready, run the script in Praat and follow the pop-up menus for further instructions. For large file batches, the script can take a while, but it will print a message when complete. Additionally, the Praat info menu will inform you when the script is complete running.
 
 warning: The script will only read files from the folder directory that you supply it. If you add audio or TextGrids into the Praat objects manually, the script will not bother reading these.
