@@ -48,6 +48,7 @@ By default, each measurement is gathered at 10% intervals throughout each phone:
 - All point measurements are taken at the 10%, 20%, 30%... 90% portions of the phone, unless otherwise specified*
 - All interval measurements are taken at the 0%->10%, 10%->20%, ... , 90%->100% portions of the phone*
 - The script supports exporting information for between 1 and 4 textgrid tiers (obligatorily phone, optionally word, and optionally notes/task-type/speaker)*
+- Gathering advanced features requires you to also select pitch and formant extraction
 - Built-in Mac/Windows/Linux support
 - Multiple CPU cores at once (Windows), see developer_tools/README.md
 - Guide on column name outputs, see column_guide.md
