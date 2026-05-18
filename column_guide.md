@@ -130,4 +130,8 @@ voice_nhr_mean = Mean noise-to-harmonics ratio (NHR) of the phoneme
 voice_hnr_mean = Mean harmonics-to-noise ratio (HNR) of the phoneme
 
 voice_h1h2_points = Point-based H1–H2 measure of the phoneme
-voice_h1h2_curve = Curve-based H1–H2 measure of the phoneme 
+voice_h1h2_curve = Curve-based H1–H2 measure of the phoneme
+
+## If you want zero crossing rate:
+n_zero_crossings = Number of zero crossings
+zero_crossing_rate = zero crossing rate in crossings per second
