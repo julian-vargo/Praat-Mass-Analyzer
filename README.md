@@ -38,6 +38,7 @@ By default, each measurement is gathered at 10% intervals throughout each phone:
 - Jitter and Shimmer
 - Center of Gravity, CoG Standard Deviation, Skewness, and Kurtosis
 - Voice analysis (percentage of voiceless intervals in a phone, Voice report pulse, pitch, period, jitter, and shimmer summaries)
+- Zero crossing rate
 
 ### Advanced features (beta)
 - Several P0 and P1 nasal amplitude and nasal frequency measurements from various papers by Styler (2017), Chen (1997), Pruthi & Espy-Wilson(2004 & 2007)

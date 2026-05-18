@@ -20,6 +20,8 @@
     i_want_A1P0=0
     i_want_advanced_parameters=0
     i_want_voice_analysis=0
+    i_want_zero_crossing_rate=0
+
 
     # Remove tab, newline, spaces from phoneme tier
     i_want_to_clean_up_phone_tier = 0
@@ -72,10 +74,10 @@ endif
 if developer_mode = 0
     beginPause: "Core Arguments"
         comment: "Please enter the file path where your TextGrids and Sounds are located."
-        sentence: "Input folder", "C:\Users\julia\Praat-Mass-Analyzer\developer_tools\test_dataset\input_folder"
+        sentence: "Input folder", "C:\Users\julia\research\test\Praat-Mass-Analyzer\developer_tools\test_dataset\input_folder"
         comment: "Please insert the desired file path and name of your output .csv file."
         comment: "This script writes the csv file for you, so you just need to supply a path."
-        sentence: "Csv file path", "C:\Users\julia\Praat-Mass-Analyzer\developer_tools\test_dataset\output.csv"
+        sentence: "Csv file path", "C:\Users\julia\research\test\Praat-Mass-Analyzer\developer_tools\test_dataset\output.csv"
         comment: "Which tier number is the tier containing your phonemes/phones of interest?"
         integer: "Phone tier number", 2
         comment: "Which tier number is your word tier? Leave as 0 if none."
@@ -96,6 +98,7 @@ if developer_mode = 0
         boolean: "I want A1P0", 1
         boolean: "I want advanced parameters", 1
         boolean: "I want voice analysis", 1
+        boolean: "I want zero crossing rate", 1
     clicked = endPause: "Submit and Continue to Next Page", 1
 
     beginPause: "Phonemes to Analyze"
@@ -145,11 +148,15 @@ runtimer = clock()
 
 if process_index = 1
     writeInfoLine: "Initializing Praat Mass Analyzer"
-    appendInfoLine: newline$, "Vargo, Julian (2026). Praat Mass Analyzer [Computer Software]"
+    appendInfoLine: newline$, "Please cite:"
+    appendInfoLine: "Vargo, Julian (2026). Praat Mass Analyzer [Computer Software]"
     appendInfoLine: "University of California, Berkeley. Department of Spanish & Portuguese"
     appendInfoLine: newline$, "This script will take a while to run while measurements are gathered."
-    appendInfoLine: "Do not exit the program."
-    appendInfoLine: newline$, "Your output file will appear at ", csv_file_path$
+    appendInfoLine: "If you are analyzing audio files over 1 hour long,"
+    appendInfoLine: "the script may take several hours to finish."
+    appendInfoLine: newline$, "Calculating acoustics and estimating run time. Do not exit the program."
+    appendInfoLine: newline$, "Your output file will appear at:"
+    appendInfoLine: csv_file_path$
 endif
 
 # Strip quotation marks from file paths. Makes the script more flexible for the user.
@@ -165,12 +172,19 @@ endif
 # This makes your script file-folder batchable. Backslashes only work on windows and forward slashes are for mac.
 # Praat needs to know whether your operating system uses forward slashes or backslashes
 # Otherwise it can't read the file from your computer
+# TODO: auto-detect windows vs unix paths
 if i_am_using_a_Windows_computer = 1    
     fileList = Create Strings as file list: "fileList", input_folder$ + "\" +"*.TextGrid"
     numberOfFiles = Get number of strings
 else
     fileList = Create Strings as file list: "fileList", input_folder$ + "/" +"*.TextGrid"
     numberOfFiles = Get number of strings
+endif
+
+# Make sure that pitch and formants are turned on when advanced parameters are turned on
+if i_want_advanced_parameters = 1
+    i_want_formants = 1
+    i_want_pitch = 1
 endif
 
 # Construct headers for csv
@@ -215,6 +229,9 @@ if i_want_advanced_parameters = 1
 endif
 if i_want_voice_analysis = 1
     header$ = header$ + ",voice_pitch_median,voice_pitch_mean,voice_pitch_sd,voice_pitch_min,voice_pitch_max,voice_pulses_n,voice_periods_n,voice_period_mean,voice_period_sd,voice_unvoiced_fraction,voice_voicebreaks_n,voice_voicebreaks_degree,voice_jitter_local,voice_jitter_local_abs,voice_jitter_rap,voice_jitter_ppq5,voice_jitter_ddp,voice_shimmer_local,voice_shimmer_local_db,voice_shimmer_apq3,voice_shimmer_apq5,voice_shimmer_apq11,voice_shimmer_dda,voice_autocorr_mean,voice_nhr_mean,voice_hnr_mean,voice_h1h2_points,voice_h1h2_curve"
+endif
+if i_want_zero_crossing_rate = 1
+    header$ = header$ + ",n_zero_crossings,zero_crossing_rate"
 endif
 
 writeFileLine: csv_file_path$, header$
@@ -661,6 +678,33 @@ for file to numberOfFiles
 
                                 results$ = results$ + "," + voice_pitch_median$ + "," + voice_pitch_mean$ + "," + voice_pitch_sd$ + "," + voice_pitch_min$ + "," + voice_pitch_max$ + "," + voice_pulses_n$ + "," + voice_periods_n$ + "," + voice_period_mean$ + "," + voice_period_sd$ + "," + voice_unvoiced_fraction$ + "," + voice_voicebreaks_n$ + "," + voice_voicebreaks_degree$ + "," + voice_jitter_local$ + "," + voice_jitter_local_abs$ + "," + voice_jitter_rap$ + "," + voice_jitter_ppq5$ + "," + voice_jitter_ddp$ + "," + voice_shimmer_local$ + "," + voice_shimmer_local_db$ + "," + voice_shimmer_apq3$ + "," + voice_shimmer_apq5$ + "," + voice_shimmer_apq11$ + "," + voice_shimmer_dda$ + "," + voice_autocorr_mean$ + "," + voice_nhr_mean$ + "," + voice_hnr_mean$ + "," + voice_h1h2_points$ + "," + voice_h1h2_curve$
                             endif
+
+                            if i_want_zero_crossing_rate
+                                    # # This is a little snippet from Wendy Elvira Garcia's script, I'll cut this later
+                                    # #Extraigo el las 30 primeras ms del intervalo
+                                    # selectObject: "LongSound " + base$
+                                    # Extract part: .intervalStart, .targetEnd, "yes"
+                                    # # Creo el proceso de puntos para contar los pasos por cero que hay en las 30 primeras milesimas de la fricativa
+                                    # To PointProcess (zeroes): 1, "yes", "yes"
+                                    # .numeroDePuntos = Get number of points
+                                    # Remove
+                                    selectObject: currentSound
+                                    currentSoundChunk = Extract part... thisPhonemeStartTime thisPhonemeEndTime rectangular 1 on
+                                    # Praat has no documentation on this command, so the arguments are as follows:
+                                    # integer of channel number (for mono it's just 1, this script doesn't support stereo)
+                                    # a "yes"/"no" boolean for includeRaisers. Not sure what this means yet but I assume it means
+                                        # zero crossings that have a positive derivative
+                                    # a "yes"/"no" boolean for includeFallers.
+                                        # Once again, I assume this means zero-crossings with a negative derivative
+                                    selectObject: currentSoundChunk
+                                    currentZeroCrossing = To PointProcess (zeroes)... 1 "yes" "yes"
+                                    nZeroCrossing = Get number of points
+                                    zeroCrossingRate = nZeroCrossing / (duration)
+
+                                    results$ = results$ + "," + string$(nZeroCrossing) + "," + string$(zeroCrossingRate)
+                                    removeObject: currentSoundChunk
+                                    removeObject: currentZeroCrossing
+                            endif
                             results$ = results$ + newline$
                         endif
                     endif
@@ -691,6 +735,24 @@ for file to numberOfFiles
         nocheck removeObject: currentPitchCC
         nocheck removeObject: currentPulses
     endif
+
+    # Once the first file finishes, I want to give users a rough estimate of how long the script will take
+    # total number of files is numberOfFiles
+    if file = 1
+        first_file_time_elapsed = clock() - runtimer
+        estimated_time = first_file_time_elapsed * (numberOfFiles - 1)
+
+        if first_file_time_elapsed < 10
+        appendInfoLine: newline$, "Approximate time remaining: ", fixed$(estimated_time * 1000, 3), " milliseconds"
+        elsif first_file_time_elapsed < 60
+        appendInfoLine: newline$, "Approximate time remaining: ", fixed$(estimated_time, 3), " seconds"
+        elsif first_file_time_elapsed < 3600
+        appendInfoLine: newline$, "Approximate time remaining: ", fixed$(estimated_time / 60, 3), " minutes"
+        else
+        appendInfoLine: newline$, "Approximate time remaining: ", fixed$(estimated_time / 3600, 3), " hours"
+        endif
+    endif
+
 endfor
 nocheck removeObject: fileList
 
