@@ -1,6 +1,6 @@
 # Praat Mass Analyzer
 
-**Praat Mass Analyzer** is a single, easy-to-use Praat script that automates the extraction of several acoustic measurements. This tool is designed for researchers and linguists who need to process large amounts of audio data efficiently. This Praat script is file batchable and operable on Windows, Mac, or any other operating system capable of running Praat. This script supports the use of multiple CPU cores.
+**Praat Mass Analyzer** is a single, easy-to-use Praat script that automates the extraction of several acoustic measurements. This tool is designed for researchers and linguists who need to process audio data efficiently. This Praat script is file batchable and operable on Windows, Mac, or Linux. This script supports multiprocessing with multiple CPU cores.
 
 ## Instructions
 
@@ -37,15 +37,14 @@ By default, each measurement is gathered at 10% intervals throughout each phone:
 - Preceding Phoneme and Following Phoneme
 - Jitter and Shimmer
 - Center of Gravity, CoG Standard Deviation, Skewness, and Kurtosis
-- Voice analysis (percentage of voiceless intervals in a phone, Voice report pulse, pitch, period, jitter, and shimmer summaries)
-- Zero crossing rate
-
-### Advanced features (beta)
-- Several P0 and P1 nasal amplitude and nasal frequency measurements from various papers by Styler (2017), Chen (1997), Pruthi & Espy-Wilson(2004 & 2007)
+- Several P0 and P1 nasal amplitude and nasal frequency measurements adapted from various papers by Styler (2017), Chen (1997), Pruthi & Espy-Wilson(2004 & 2007)
 - H1-through-H5 frequency & amplitude
 - LTAS Pitch and Formant analysis
 - Amplitudes from 1k-through-5k
 - RMS Energy
+- Voice analysis (percentage of voiceless intervals in a phone, Voice report pulse, pitch, period, jitter, and shimmer summaries)
+- Zero crossing rate
+- Up to 25 Mel Frequency Cepstral Coefficients
  
 ## Notes and additional features
 - All point measurements are taken at the 10%, 20%, 30%... 90% portions of the phone, unless otherwise specified*
@@ -59,9 +58,9 @@ By default, each measurement is gathered at 10% intervals throughout each phone:
 ## Contact
 Julian Vargo | Department of Spanish & Portuguese | University of California, Berkeley | julianvargo@berkeley.edu
 
-*Written on Praat version 6.4.48, released 9 December 2025 on ARM64 Windows (Boersma & Weenink 2025)*
+*Written on Praat version 6.4.48 on ARM64 Windows*
 
-*Script last updated 22 December 2025*
+*Script last updated 20 May 2026*
 
 *If you are having trouble getting this Praat script to work, please email me and I can arrange a time to assist you*
 

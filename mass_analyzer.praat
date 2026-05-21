@@ -1,8 +1,8 @@
 # COMMAND LINE USERS: CONFIGURE YOUR VARIABLES HERE
 
     # Main arguments, use forward slashes for Mac or Unix systems
-    input_folder$ = "C:\Users\julia\Downloads\muhsic_wav_441kHz"
-    csv_file_path$ = "C:\Users\julia\Downloads\muhsic_csv_counts\word.csv"
+    input_folder$ = "C:\Users\julia\research\Praat-Mass-Analyzer\developer_tools\test_dataset\input_folder"
+    csv_file_path$ = "C:\Users\julia\research\Praat-Mass-Analyzer\developer_tools\test_dataset\output.csv"
 
     # Tiers: phone is mandatory. Use 0 to ignore for other tiers such as word, speaker, notes, task_type
     phone_tier_number = 1
@@ -21,7 +21,7 @@
     i_want_advanced_parameters=0
     i_want_voice_analysis=0
     i_want_zero_crossing_rate=0
-
+    i_want_mfcc=0
 
     # Remove tab, newline, spaces from phoneme tier
     i_want_to_clean_up_phone_tier = 0
@@ -38,7 +38,7 @@
     maximum_amplitude_factor = 1.6
     period_floor = 0.0001
     period_ceiling = 0.02
-    # number of candidates in voice report
+    # number of candidates in voice report, 15 is standard
         maximum_candidates = 15
     # boolean, voice analysis accuracy, 0 = less accurate
         cc_accuracy = 0
@@ -47,6 +47,7 @@
     octave_cost = 0.01
     octave_jump_cost = 0.35
     voiced_unvoiced_cost = 0.1
+    number_of_mfcc_coefficients = 12
     
     # 1 means true
      i_am_using_a_Windows_computer = 1
@@ -74,10 +75,10 @@ endif
 if developer_mode = 0
     beginPause: "Core Arguments"
         comment: "Please enter the file path where your TextGrids and Sounds are located."
-        sentence: "Input folder", "C:\Users\julia\research\test\Praat-Mass-Analyzer\developer_tools\test_dataset\input_folder"
+        sentence: "Input folder", "C:\Users\julia\research\Praat-Mass-Analyzer\developer_tools\test_dataset\input_folder"
         comment: "Please insert the desired file path and name of your output .csv file."
         comment: "This script writes the csv file for you, so you just need to supply a path."
-        sentence: "Csv file path", "C:\Users\julia\research\test\Praat-Mass-Analyzer\developer_tools\test_dataset\output.csv"
+        sentence: "Csv file path", "C:\Users\julia\research\Praat-Mass-Analyzer\developer_tools\test_dataset\output.csv"
         comment: "Which tier number is the tier containing your phonemes/phones of interest?"
         integer: "Phone tier number", 2
         comment: "Which tier number is your word tier? Leave as 0 if none."
@@ -99,6 +100,7 @@ if developer_mode = 0
         boolean: "I want advanced parameters", 1
         boolean: "I want voice analysis", 1
         boolean: "I want zero crossing rate", 1
+        boolean: "I want mfcc", 1
     clicked = endPause: "Submit and Continue to Next Page", 1
 
     beginPause: "Phonemes to Analyze"
@@ -122,6 +124,7 @@ if developer_mode = 0
         positive: "Maximum amplitude factor", 1.6
         positive: "Period floor", 0.0001
         positive: "Period ceiling", 0.02
+        integer: "Number of mfcc coefficients", 12
     clicked = endPause: "Submit and Continue to Next Page", 1
 endif
 
@@ -225,7 +228,61 @@ endif
 if i_want_advanced_parameters = 1
     i_want_formants = 1
     i_want_pitch = 1
-    header$ = header$ + ",ltas_f0_10,ltas_f0_20,ltas_f0_30,ltas_f0_40,ltas_f0_50,ltas_f0_60,ltas_f0_70,ltas_f0_80,ltas_f0_90,ltas_f0_100,ltas_f1_10,ltas_f1_20,ltas_f1_30,ltas_f1_40,ltas_f1_50,ltas_f1_60,ltas_f1_70,ltas_f1_80,ltas_f1_90,ltas_f1_100,ltas_f2_10,ltas_f2_20,ltas_f2_30,ltas_f2_40,ltas_f2_50,ltas_f2_60,ltas_f2_70,ltas_f2_80,ltas_f2_90,ltas_f2_100,ltas_f3_10,ltas_f3_20,ltas_f3_30,ltas_f3_40,ltas_f3_50,ltas_f3_60,ltas_f3_70,ltas_f3_80,ltas_f3_90,ltas_f3_100,ltas_f4_10,ltas_f4_20,ltas_f4_30,ltas_f4_40,ltas_f4_50,ltas_f4_60,ltas_f4_70,ltas_f4_80,ltas_f4_90,ltas_f4_100,ltas_f5_10,ltas_f5_20,ltas_f5_30,ltas_f5_40,ltas_f5_50,ltas_f5_60,ltas_f5_70,ltas_f5_80,ltas_f5_90,ltas_f5_100,a1_10,a1_20,a1_30,a1_40,a1_50,a1_60,a1_70,a1_80,a1_90,a1_100,a2_10,a2_20,a2_30,a2_40,a2_50,a2_60,a2_70,a2_80,a2_90,a2_100,a3_10,a3_20,a3_30,a3_40,a3_50,a3_60,a3_70,a3_80,a3_90,a3_100,a4_10,a4_20,a4_30,a4_40,a4_50,a4_60,a4_70,a4_80,a4_90,a4_100,a5_10,a5_20,a5_30,a5_40,a5_50,a5_60,a5_70,a5_80,a5_90,a5_100,h2_10,h2_20,h2_30,h2_40,h2_50,h2_60,h2_70,h2_80,h2_90,h2_100,h3_10,h3_20,h3_30,h3_40,h3_50,h3_60,h3_70,h3_80,h3_90,h3_100,h4_10,h4_20,h4_30,h4_40,h4_50,h4_60,h4_70,h4_80,h4_90,h4_100,h5_10,h5_20,h5_30,h5_40,h5_50,h5_60,h5_70,h5_80,h5_90,h5_100,ha1_10,ha1_20,ha1_30,ha1_40,ha1_50,ha1_60,ha1_70,ha1_80,ha1_90,ha1_100,ha2_10,ha2_20,ha2_30,ha2_40,ha2_50,ha2_60,ha2_70,ha2_80,ha2_90,ha2_100,ha3_10,ha3_20,ha3_30,ha3_40,ha3_50,ha3_60,ha3_70,ha3_80,ha3_90,ha3_100,ha4_10,ha4_20,ha4_30,ha4_40,ha4_50,ha4_60,ha4_70,ha4_80,ha4_90,ha4_100,ha5_10,ha5_20,ha5_30,ha5_40,ha5_50,ha5_60,ha5_70,ha5_80,ha5_90,ha5_100,k1a_10,k1a_20,k1a_30,k1a_40,k1a_50,k1a_60,k1a_70,k1a_80,k1a_90,k1a_100,k2a_10,k2a_20,k2a_30,k2a_40,k2a_50,k2a_60,k2a_70,k2a_80,k2a_90,k2a_100,k3a_10,k3a_20,k3a_30,k3a_40,k3a_50,k3a_60,k3a_70,k3a_80,k3a_90,k3a_100,k4a_10,k4a_20,k4a_30,k4a_40,k4a_50,k4a_60,k4a_70,k4a_80,k4a_90,k4a_100,k5a_10,k5a_20,k5a_30,k5a_40,k5a_50,k5a_60,k5a_70,k5a_80,k5a_90,k5a_100,pa0_via_h1h2_10,pa0_via_h1h2_20,pa0_via_h1h2_30,pa0_via_h1h2_40,pa0_via_h1h2_50,pa0_via_h1h2_60,pa0_via_h1h2_70,pa0_via_h1h2_80,pa0_via_h1h2_90,pa0_via_h1h2_100,p0_via_250_450_10,p0_via_250_450_20,p0_via_250_450_30,p0_via_250_450_40,p0_via_250_450_50,p0_via_250_450_60,p0_via_250_450_70,p0_via_250_450_80,p0_via_250_450_90,p0_via_250_450_100,pa0_via_250_450_10,pa0_via_250_450_20,pa0_via_250_450_30,pa0_via_250_450_40,pa0_via_250_450_50,pa0_via_250_450_60,pa0_via_250_450_70,pa0_via_250_450_80,pa0_via_250_450_90,pa0_via_250_450_100,p0_via_below_f1_10,p0_via_below_f1_20,p0_via_below_f1_30,p0_via_below_f1_40,p0_via_below_f1_50,p0_via_below_f1_60,p0_via_below_f1_70,p0_via_below_f1_80,p0_via_below_f1_90,p0_via_below_f1_100,pa0_via_below_f1_10,pa0_via_below_f1_20,pa0_via_below_f1_30,pa0_via_below_f1_40,pa0_via_below_f1_50,pa0_via_below_f1_60,pa0_via_below_f1_70,pa0_via_below_f1_80,pa0_via_below_f1_90,pa0_via_below_f1_100,p1_via_850_1050_10,p1_via_850_1050_20,p1_via_850_1050_30,p1_via_850_1050_40,p1_via_850_1050_50,p1_via_850_1050_60,p1_via_850_1050_70,p1_via_850_1050_80,p1_via_850_1050_90,p1_via_850_1050_100,pa1_via_850_1050_10,pa1_via_850_1050_20,pa1_via_850_1050_30,pa1_via_850_1050_40,pa1_via_850_1050_50,pa1_via_850_1050_60,pa1_via_850_1050_70,pa1_via_850_1050_80,pa1_via_850_1050_90,pa1_via_850_1050_100,p1_via_above_f1_10,p1_via_above_f1_20,p1_via_above_f1_30,p1_via_above_f1_40,p1_via_above_f1_50,p1_via_above_f1_60,p1_via_above_f1_70,p1_via_above_f1_80,p1_via_above_f1_90,p1_via_above_f1_100,pa1_via_above_f1_10,pa1_via_above_f1_20,pa1_via_above_f1_30,pa1_via_above_f1_40,pa1_via_above_f1_50,pa1_via_above_f1_60,pa1_via_above_f1_70,pa1_via_above_f1_80,pa1_via_above_f1_90,pa1_via_above_f1_100,rms_10,rms_20,rms_30,rms_40,rms_50,rms_60,rms_70,rms_80,rms_90,rms_100"
+    for formant from 0 to 5
+        for t from 1 to 10
+            header$ = header$ + ",ltas_f" + string$(formant) + "_" + string$(t) + "0"
+        endfor
+    endfor
+    for formant from 1 to 5
+        for t from 1 to 10
+            header$ = header$ + ",a" + string$(formant) + "_" + string$(t) + "0"
+        endfor
+    endfor
+    for h from 2 to 5
+        for t from 1 to 10
+            header$ = header$ + ",h" + string$(h) + "_" + string$(t) + "0"
+        endfor
+    endfor
+    for h from 1 to 5
+        for t from 1 to 10
+            header$ = header$ + ",ha" + string$(h) + "_" + string$(t) + "0"
+        endfor
+    endfor
+    for k from 1 to 5
+        for t from 1 to 10
+            header$ = header$ + ",k" + string$(k) + "a_" + string$(t) + "0"
+        endfor
+    endfor
+    for t from 1 to 10
+        header$ = header$ + ",pa0_via_h1h2_" + string$(t) + "0"
+    endfor
+    for t from 1 to 10
+        header$ = header$ + ",p0_via_250_450_" + string$(t) + "0"
+    endfor
+    for t from 1 to 10
+        header$ = header$ + ",pa0_via_250_450_" + string$(t) + "0"
+    endfor
+    for t from 1 to 10
+        header$ = header$ + ",p0_via_below_f1_" + string$(t) + "0"
+    endfor
+    for t from 1 to 10
+        header$ = header$ + ",pa0_via_below_f1_" + string$(t) + "0"
+    endfor
+    for t from 1 to 10
+        header$ = header$ + ",p1_via_850_1050_" + string$(t) + "0"
+    endfor
+    for t from 1 to 10
+        header$ = header$ + ",pa1_via_850_1050_" + string$(t) + "0"
+    endfor
+    for t from 1 to 10
+        header$ = header$ + ",p1_via_above_f1_" + string$(t) + "0"
+    endfor
+    for t from 1 to 10
+        header$ = header$ + ",pa1_via_above_f1_" + string$(t) + "0"
+    endfor
+    for t from 1 to 10
+        header$ = header$ + ",rms_" + string$(t) + "0"
+    endfor
 endif
 if i_want_voice_analysis = 1
     header$ = header$ + ",voice_pitch_median,voice_pitch_mean,voice_pitch_sd,voice_pitch_min,voice_pitch_max,voice_pulses_n,voice_periods_n,voice_period_mean,voice_period_sd,voice_unvoiced_fraction,voice_voicebreaks_n,voice_voicebreaks_degree,voice_jitter_local,voice_jitter_local_abs,voice_jitter_rap,voice_jitter_ppq5,voice_jitter_ddp,voice_shimmer_local,voice_shimmer_local_db,voice_shimmer_apq3,voice_shimmer_apq5,voice_shimmer_apq11,voice_shimmer_dda,voice_autocorr_mean,voice_nhr_mean,voice_hnr_mean,voice_h1h2_points,voice_h1h2_curve"
@@ -233,7 +290,13 @@ endif
 if i_want_zero_crossing_rate = 1
     header$ = header$ + ",n_zero_crossings,zero_crossing_rate"
 endif
-
+if i_want_mfcc=1
+    for t from 1 to 10
+        for n from 1 to number_of_mfcc_coefficients
+            header$ = header$ + ",mfcc" + string$(n) + "_" + string$(t) + "0"
+        endfor
+    endfor
+endif
 writeFileLine: csv_file_path$, header$
 
 currentResults$ = ""
@@ -679,15 +742,7 @@ for file to numberOfFiles
                                 results$ = results$ + "," + voice_pitch_median$ + "," + voice_pitch_mean$ + "," + voice_pitch_sd$ + "," + voice_pitch_min$ + "," + voice_pitch_max$ + "," + voice_pulses_n$ + "," + voice_periods_n$ + "," + voice_period_mean$ + "," + voice_period_sd$ + "," + voice_unvoiced_fraction$ + "," + voice_voicebreaks_n$ + "," + voice_voicebreaks_degree$ + "," + voice_jitter_local$ + "," + voice_jitter_local_abs$ + "," + voice_jitter_rap$ + "," + voice_jitter_ppq5$ + "," + voice_jitter_ddp$ + "," + voice_shimmer_local$ + "," + voice_shimmer_local_db$ + "," + voice_shimmer_apq3$ + "," + voice_shimmer_apq5$ + "," + voice_shimmer_apq11$ + "," + voice_shimmer_dda$ + "," + voice_autocorr_mean$ + "," + voice_nhr_mean$ + "," + voice_hnr_mean$ + "," + voice_h1h2_points$ + "," + voice_h1h2_curve$
                             endif
 
-                            if i_want_zero_crossing_rate
-                                    # # This is a little snippet from Wendy Elvira Garcia's script, I'll cut this later
-                                    # #Extraigo el las 30 primeras ms del intervalo
-                                    # selectObject: "LongSound " + base$
-                                    # Extract part: .intervalStart, .targetEnd, "yes"
-                                    # # Creo el proceso de puntos para contar los pasos por cero que hay en las 30 primeras milesimas de la fricativa
-                                    # To PointProcess (zeroes): 1, "yes", "yes"
-                                    # .numeroDePuntos = Get number of points
-                                    # Remove
+                            if i_want_zero_crossing_rate = 1
                                     selectObject: currentSound
                                     currentSoundChunk = Extract part... thisPhonemeStartTime thisPhonemeEndTime rectangular 1 on
                                     # Praat has no documentation on this command, so the arguments are as follows:
@@ -705,6 +760,49 @@ for file to numberOfFiles
                                     removeObject: currentSoundChunk
                                     removeObject: currentZeroCrossing
                             endif
+
+                            # This section gathers the first n mel frequency ceptral coefficients
+                            # And importantly for dynamic analysis, it does this at 10 time intervals
+                            # one problem with MFCCs in Praat is the sparse documentation
+                            # According to https://github.com/praat/praat.github.io/blob/9547a549ec5cb47d924f454efd2a4726590e62a4/LPC/praat_LPC_init.cpp#L1
+                            # To MFCC... numberOfCoefficients, windowLength, timeStep, firstFilterFrequency, distanceBetweenFilters, maximumFrequency
+                            if i_want_mfcc = 1
+                                sumframes = 0
+                                maxT = 10
+                                for t from 1 to maxT
+                                    selectObject: currentSound
+                                    chunkStart = thisPhonemeStartTime + ((t - 1) * duration / maxT)
+                                    chunkEnd   = thisPhonemeStartTime + (t * duration / maxT)
+                                    currentSoundChunk = Extract part... chunkStart chunkEnd rectangular 1 yes
+                                    selectObject: currentSoundChunk
+                                    chunkDuration = Get total duration
+                                    windowLength = chunkDuration * 0.4
+                                    timeStep = windowLength / 3
+                                    currentmfcc = To MFCC... number_of_mfcc_coefficients windowLength timeStep 100.0 100.0 0.0
+                                    removeObject: currentSoundChunk
+
+                                    selectObject: currentmfcc
+                                    
+                                    currentmfcc_table = To TableOfReal... no
+                                    selectObject: currentmfcc_table
+
+                                    number_of_frames = Get number of rows
+                                    removeObject: currentmfcc
+                                    selectObject: currentmfcc_table
+                                    for col from 1 to number_of_mfcc_coefficients
+                                        sumframes = 0
+                                        for frame from 1 to number_of_frames
+                                            mfcc = Get value... frame col
+                                            sumframes = sumframes + mfcc
+                                        endfor
+                                        avg_mfcc = sumframes / number_of_frames
+                                        sumframes = 0
+                                        results$ = results$ + "," + string$(avg_mfcc)
+                                    endfor
+                                    removeObject: currentmfcc_table
+                                endfor
+                            endif
+
                             results$ = results$ + newline$
                         endif
                     endif
