@@ -135,3 +135,6 @@
 ## If you want zero crossing rate:
 - n_zero_crossings = Number of zero crossings
 - zero_crossing_rate = zero crossing rate in crossings per second
+
+# If you want Mel Frequency Cepstral Coefficients (MFCCs)
+- MFCCn_10, MFCCn_20, MFCCn_100 = The nth time-averaged-MFCC at the 0-to-10%, 10-to-20%, ... 90-to-100% timepoints of the phoneme
