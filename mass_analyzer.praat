@@ -620,7 +620,7 @@ for file to numberOfFiles
 
                                             # p1 defined as amplitude of peak above F1 (Tarun Pruthi & Carol Espy Wilson 2004)
                                             # no 'sg' method, no cepstral smoothing or group delay spectra
-                                            p1_via_above_f1[t] = Get frequency of maximum... (ltas_f1[t]-(1.5*ltas_f0[t])) (ltas_f1[t]-(0.5*ltas_f0[t])) None
+                                            p1_via_above_f1[t] = Get frequency of maximum... (ltas_f1[t]+(0.5*ltas_f0[t])) (ltas_f1[t]+(1.5*ltas_f0[t])) None
                                             pa1_via_above_f1[t] = Get value at frequency... p1_via_above_f1[t] Nearest
                                         endif
                                         if string$(f2[t]) <> "--undefined--"
