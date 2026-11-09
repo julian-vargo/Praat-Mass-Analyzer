@@ -21,7 +21,7 @@ Mac example: /Users/julian/Desktop/audio_and_textgrid_input_folder
 
 ## How to cite
 
-Vargo, Julian (2025). Praat Mass Analyzer. [https://github.com/julian-vargo/Praat-Mass-Analyzer/]
+Vargo, Julian (2026). Praat Mass Analyzer. [https://github.com/julian-vargo/Praat-Mass-Analyzer/]
 Department of Spanish & Portuguese. University of California, Berkeley.
 
 ## Features
@@ -33,7 +33,7 @@ By default, each measurement is gathered at 10% intervals throughout each phone:
 - Harmonicity
 - Intensity
 - Intensity Min and Max (One measurement)
-- Max intensity of the current phone minus the minimum intensity of the previous phone (header name is intensity_difference) Bongiovanni (2015).
+- Max intensity of the current phone minus the minimum intensity of the previous phone (header name is intensity_difference).
 - Preceding Phoneme and Following Phoneme
 - Jitter and Shimmer
 - Center of Gravity, CoG Standard Deviation, Skewness, and Kurtosis
